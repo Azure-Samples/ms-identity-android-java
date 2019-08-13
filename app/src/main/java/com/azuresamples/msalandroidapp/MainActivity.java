@@ -24,7 +24,8 @@ public class MainActivity extends AppCompatActivity
         OnFragmentInteractionListener{
 
     enum AppFragment {
-        SingleAccount
+        SingleAccount,
+        MultipleAccount
     }
 
     private AppFragment mCurrentFragment;
@@ -72,6 +73,10 @@ public class MainActivity extends AppCompatActivity
                     setCurrentFragment(AppFragment.SingleAccount);
                 }
 
+                if (id == R.id.nav_multiple_account) {
+                    setCurrentFragment(AppFragment.MultipleAccount);
+                }
+
                 drawer.removeDrawerListener(this);
             }
 
@@ -97,6 +102,11 @@ public class MainActivity extends AppCompatActivity
         switch (fragment) {
             case SingleAccount:
                 getSupportActionBar().setTitle("Single Account Mode");
+                return;
+
+            case MultipleAccount:
+                getSupportActionBar().setTitle("Multiple Account Mode");
+                return;
         }
     }
 
@@ -104,6 +114,11 @@ public class MainActivity extends AppCompatActivity
         switch (fragment) {
             case SingleAccount:
                 attachFragment(new SingleAccountModeFragment());
+                return;
+
+            case MultipleAccount:
+                attachFragment(new MultipleAccountModeFragment());
+                return;
         }
     }
 

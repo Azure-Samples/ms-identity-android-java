@@ -3,14 +3,15 @@ package com.azuresamples.msalandroidapp;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,8 +20,8 @@ import com.android.volley.VolleyError;
 import com.microsoft.identity.client.AuthenticationCallback;
 import com.microsoft.identity.client.IAccount;
 import com.microsoft.identity.client.IAuthenticationResult;
+import com.microsoft.identity.client.IMultipleAccountPublicClientApplication;
 import com.microsoft.identity.client.IPublicClientApplication;
-import com.microsoft.identity.client.ISingleAccountPublicClientApplication;
 import com.microsoft.identity.client.PublicClientApplication;
 import com.microsoft.identity.client.exception.MsalClientException;
 import com.microsoft.identity.client.exception.MsalException;
@@ -29,65 +30,56 @@ import com.microsoft.identity.client.exception.MsalUiRequiredException;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * Implementation sample for 'Single account' mode.
- * <p>
- * If your app only supports one account being signed-in at a time, this is for you.
- * This requires "account_mode" to be set as "SINGLE" in the configuration file.
- * (Please see res/raw/auth_config_single_account.json for more info).
- * <p>
- * Please note that switching mode (between 'single' and 'multiple' might cause a loss of data.
+ * Implementation sample for 'Multiple account' mode.
  */
-public class SingleAccountModeFragment extends Fragment {
+public class MultipleAccountModeFragment extends Fragment {
     private static final String TAG = SingleAccountModeFragment.class.getSimpleName();
 
     /* Azure AD v2 Configs */
     final static String AUTHORITY = "https://login.microsoftonline.com/common";
 
     /* UI & Debugging Variables */
-    Button signInButton;
-    Button signOutButton;
+    Button removeAccountButton;
     Button callGraphApiInteractiveButton;
     Button callGraphApiSilentButton;
     TextView scopeTextView;
     TextView graphResourceTextView;
     TextView logTextView;
-    TextView currentUserTextView;
-    TextView deviceModeTextView;
+    Spinner accountListSpinner;
 
     /* Azure AD Variables */
-    private ISingleAccountPublicClientApplication mSingleAccountApp;
+    private IMultipleAccountPublicClientApplication mMultipleAccountApp;
+
+    private List<IAccount> accountList;
 
     @Override
-    public View onCreateView(LayoutInflater inflater,
-                             ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View view = inflater.inflate(R.layout.fragment_single_account_mode, container, false);
+        final View view = inflater.inflate(R.layout.fragment_multiple_account_mode, container, false);
         initializeUI(view);
 
         // Creates a PublicClientApplication object with res/raw/auth_config_single_account.json
-        PublicClientApplication.createSingleAccountPublicClientApplication(getContext(),
-                R.raw.auth_config_single_account,
+        PublicClientApplication.createMultipleAccountPublicClientApplication(getContext(),
+                R.raw.auth_config_multiple_account,
                 new PublicClientApplication.ApplicationCreatedListener() {
                     @Override
                     public void onCreated(IPublicClientApplication application) {
 
-                        /**
-                         * This test app assumes that the app is only going to support one account.
-                         * If the device is not marked as shared, This requires "account_mode" : "SINGLE" in the config json file.
-                         * In shared mode, MSAL will only returns ISingleAccountPublicClientApplication.
-                         **/
-                        mSingleAccountApp = (ISingleAccountPublicClientApplication) application;
-
-                        /**
-                         * Use this isSharedDevice() flag to adjust your UI accordingly in shared mode.
-                         * */
-                        deviceModeTextView.setText(mSingleAccountApp.isSharedDevice() ?
-                                "Shared" :
-                                "Non-Shared");
-
-                        loadAccount();
+                        if (application instanceof IMultipleAccountPublicClientApplication) {
+                            mMultipleAccountApp = (IMultipleAccountPublicClientApplication) application;
+                            loadAccount();
+                        } else {
+                            /* If the device is in shared mode, it will ALWAYS return ISingleAccountPublicClientApplication. */
+                            logTextView.setText("Please switch to 'Single Account' mode.");
+                            removeAccountButton.setEnabled(false);
+                            callGraphApiInteractiveButton.setEnabled(false);
+                            callGraphApiSilentButton.setEnabled(false);
+                        }
                     }
 
                     @Override
@@ -103,57 +95,51 @@ public class SingleAccountModeFragment extends Fragment {
      * Initializes UI variables and callbacks.
      */
     private void initializeUI(@NonNull final View view) {
-        signInButton = view.findViewById(R.id.btn_signIn);
-        signOutButton = view.findViewById(R.id.btn_removeAccount);
+        removeAccountButton = view.findViewById(R.id.btn_removeAccount);
         callGraphApiInteractiveButton = view.findViewById(R.id.btn_callGraphInteractively);
         callGraphApiSilentButton = view.findViewById(R.id.btn_callGraphSilently);
         scopeTextView = view.findViewById(R.id.scope);
         graphResourceTextView = view.findViewById(R.id.msgraph_url);
         logTextView = view.findViewById(R.id.txt_log);
-        currentUserTextView = view.findViewById(R.id.current_user);
-        deviceModeTextView = view.findViewById(R.id.device_mode);
+        accountListSpinner = view.findViewById(R.id.account_list);
 
-        signInButton.setOnClickListener(new View.OnClickListener() {
+        removeAccountButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if (mSingleAccountApp == null) {
-                    return;
-                }
-
-                mSingleAccountApp.signIn(getActivity(), getScopes(), getAuthInteractiveCallback());
-            }
-        });
-
-        signOutButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                if (mSingleAccountApp == null) {
+                if (mMultipleAccountApp == null) {
                     return;
                 }
 
                 /**
-                 * Removes the signed-in account and cached tokens from this app (or device, if the device is in shared mode).
+                 * Removes the selected account and cached tokens from this app (or device, if the device is in shared mode).
                  */
-                mSingleAccountApp.signOut(new ISingleAccountPublicClientApplication.SignOutCallback() {
-                    @Override
-                    public void onSignOut() {
-                        updateUI(null);
-                        performOperationOnSignOut();
-                    }
+                mMultipleAccountApp.removeAccount(accountList.get(accountListSpinner.getSelectedItemPosition()),
+                        new IMultipleAccountPublicClientApplication.RemoveAccountCallback() {
+                            @Override
+                            public void onRemoved() {
+                                Toast.makeText(getContext(), "Account removed.", Toast.LENGTH_SHORT)
+                                        .show();
 
-                    @Override
-                    public void onError(@NonNull MsalException exception) {
-                        displayError(exception);
-                    }
-                });
+                                /* Reload account asynchronously to get the up-to-date list. */
+                                loadAccount();
+                            }
+
+                            @Override
+                            public void onError(@NonNull MsalException exception) {
+                                displayError(exception);
+                            }
+                        });
             }
         });
 
         callGraphApiInteractiveButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if (mSingleAccountApp == null) {
+                if (mMultipleAccountApp == null) {
                     return;
                 }
 
                 /**
+                 * Acquire token interactively. It will also create an account object for the silent call as a result (to be obtained by getAccount()).
+                 *
                  * If acquireTokenSilent() returns an error that requires an interaction,
                  * invoke acquireToken() to have the user resolve the interrupt interactively.
                  *
@@ -162,36 +148,30 @@ public class SingleAccountModeFragment extends Fragment {
                  *  - the resource you're acquiring a token for has a stricter set of requirement than your SSO refresh token.
                  *  - you're introducing a new scope which the user has never consented for.
                  */
-                mSingleAccountApp.acquireToken(getActivity(), getScopes(), getAuthInteractiveCallback());
+                mMultipleAccountApp.acquireToken(getActivity(), getScopes(), getAuthInteractiveCallback());
             }
         });
 
         callGraphApiSilentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mSingleAccountApp == null) {
+                if (mMultipleAccountApp == null) {
                     return;
                 }
 
                 /**
-                 * Once you've signed the user in,
-                 * you can perform acquireTokenSilent to obtain resources without interrupting the user.
+                 * Performs acquireToken without interrupting the user.
+                 *
+                 * This requires an account object of the account you're obtaining a token for.
+                 * (can be obtained via getAccount()).
                  */
-                mSingleAccountApp.acquireTokenSilentAsync(getScopes(), AUTHORITY, getAuthSilentCallback());
+                mMultipleAccountApp.acquireTokenSilentAsync(getScopes(),
+                        accountList.get(accountListSpinner.getSelectedItemPosition()),
+                        AUTHORITY,
+                        getAuthSilentCallback());
             }
         });
 
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        /**
-         * In shared device mode, the account might be signed in/out by other apps while this app is not in focus.
-         * Therefore, we want to update the account state by invoking loadAccount() here.
-         */
-        loadAccount();
     }
 
     /**
@@ -207,26 +187,19 @@ public class SingleAccountModeFragment extends Fragment {
      * In the shared device mode, if the user is signed out from the device, the app can also perform the clean-up work in onAccountChanged().
      */
     private void loadAccount() {
-        if (mSingleAccountApp == null) {
+        if (mMultipleAccountApp == null) {
             return;
         }
 
-        mSingleAccountApp.getCurrentAccountAsync(new ISingleAccountPublicClientApplication.CurrentAccountCallback() {
+        mMultipleAccountApp.getAccounts(new IPublicClientApplication.LoadAccountsCallback() {
             @Override
-            public void onAccountLoaded(@Nullable IAccount activeAccount) {
-                updateUI(activeAccount);
+            public void onTaskCompleted(final List<IAccount> result) {
+                accountList = result;
+                updateUI(accountList);
             }
 
             @Override
-            public void onAccountChanged(@Nullable IAccount priorAccount, @Nullable IAccount currentAccount) {
-                if (currentAccount == null) {
-                    // Perform a cleanup task as the signed-in account changed.
-                    performOperationOnSignOut();
-                }
-            }
-
-            @Override
-            public void onError(@NonNull Exception exception) {
+            public void onError(MsalException exception) {
                 logTextView.setText(exception.toString());
             }
         });
@@ -285,11 +258,11 @@ public class SingleAccountModeFragment extends Fragment {
                 Log.d(TAG, "Successfully authenticated");
                 Log.d(TAG, "ID Token: " + authenticationResult.getAccount().getClaims().get("id_token"));
 
-                /* Update account */
-                updateUI(authenticationResult.getAccount());
-
                 /* call graph */
                 callGraphAPI(authenticationResult);
+
+                /* Reload account asynchronously to get the up-to-date list. */
+                loadAccount();
             }
 
             @Override
@@ -362,32 +335,30 @@ public class SingleAccountModeFragment extends Fragment {
     }
 
     /**
-     * Updates UI based on the current account.
+     * Updates UI based on the obtained account list.
      */
-    private void updateUI(@Nullable final IAccount account) {
+    private void updateUI(@NonNull final List<IAccount> result) {
 
-        if (account != null) {
-            signInButton.setEnabled(false);
-            signOutButton.setEnabled(true);
+        if (result.size() > 0) {
+            removeAccountButton.setEnabled(true);
             callGraphApiInteractiveButton.setEnabled(true);
             callGraphApiSilentButton.setEnabled(true);
-            currentUserTextView.setText(account.getUsername());
         } else {
-            signInButton.setEnabled(true);
-            signOutButton.setEnabled(false);
-            callGraphApiInteractiveButton.setEnabled(false);
+            removeAccountButton.setEnabled(false);
+            callGraphApiInteractiveButton.setEnabled(true);
             callGraphApiSilentButton.setEnabled(false);
-            currentUserTextView.setText("");
         }
-    }
 
-    /**
-     * Updates UI when app sign out succeeds
-     */
-    private void performOperationOnSignOut() {
-        final String signOutText = "Signed Out.";
-        currentUserTextView.setText("");
-        Toast.makeText(getContext(), signOutText, Toast.LENGTH_SHORT)
-                .show();
+        final ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(
+                getContext(), android.R.layout.simple_spinner_item,
+                new ArrayList<String>() {{
+                    for (final IAccount account : result)
+                        add(account.getUsername());
+                }}
+        );
+
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        accountListSpinner.setAdapter(dataAdapter);
+        dataAdapter.notifyDataSetChanged();
     }
 }

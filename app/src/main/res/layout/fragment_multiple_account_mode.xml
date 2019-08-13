@@ -3,13 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SingleAccountModeFragment">
+    tools:context=".MultipleAccountModeFragment">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context=".SingleAccountModeFragment">
+        tools:context=".MultipleAccountModeFragment">
 
         <LinearLayout
             android:id="@+id/activity_main"
@@ -102,67 +102,15 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
-                    android:textStyle="bold"
-                    android:text="Signed-in user" />
+                    android:text="Accounts"
+                    android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/current_user"
+                <Spinner
+                    android:id="@+id/account_list"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="5dp"
                     android:layout_weight="7"
-                    android:text="None" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:weightSum="10">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="3"
-                    android:textStyle="bold"
-                    android:text="Device Mode" />
-
-                <TextView
-                    android:id="@+id/device_mode"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="5dp"
-                    android:layout_weight="7"
-                    android:text="Non-shared" />
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:weightSum="10">
-
-                <Button
-                    android:id="@+id/btn_signIn"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="5"
-                    android:gravity="center"
-                    android:text="Sign In"/>
-
-                <Button
-                    android:id="@+id/btn_removeAccount"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="5"
-                    android:gravity="center"
-                    android:text="Sign Out"
-                    android:enabled="false"/>
+                    android:spinnerMode="dropdown" />
             </LinearLayout>
 
 
@@ -177,16 +125,34 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="5"
-                    android:text="Get Graph Data Interactively"
-                    android:enabled="false"/>
+                    android:enabled="false"
+                    android:text="Get Graph Data Interactively" />
 
                 <Button
                     android:id="@+id/btn_callGraphSilently"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="5"
-                    android:text="Get Graph Data Silently"
-                    android:enabled="false"/>
+                    android:enabled="false"
+                    android:text="Get Graph Data Silently" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:weightSum="10">
+
+                <Button
+                    android:id="@+id/btn_removeAccount"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="10"
+                    android:enabled="false"
+                    android:gravity="center"
+                    android:text="Remove Account" />
             </LinearLayout>
 
 
