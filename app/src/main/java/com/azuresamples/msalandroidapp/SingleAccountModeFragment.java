@@ -226,7 +226,7 @@ public class SingleAccountModeFragment extends Fragment {
             }
 
             @Override
-            public void onError(@NonNull Exception exception) {
+            public void onError(@NonNull MsalException exception) {
                 logTextView.setText(exception.toString());
             }
         });

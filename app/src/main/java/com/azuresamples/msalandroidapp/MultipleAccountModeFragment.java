@@ -75,7 +75,7 @@ public class MultipleAccountModeFragment extends Fragment {
                             loadAccount();
                         } else {
                             /* If the device is in shared mode, it will ALWAYS return ISingleAccountPublicClientApplication. */
-                            logTextView.setText("Please switch to 'Single Account' mode.");
+                            logTextView.setText("Device is in shared mode. Please switch to 'Single Account' mode.");
                             removeAccountButton.setEnabled(false);
                             callGraphApiInteractiveButton.setEnabled(false);
                             callGraphApiSilentButton.setEnabled(false);
