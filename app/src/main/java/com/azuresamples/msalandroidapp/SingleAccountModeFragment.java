@@ -69,16 +69,15 @@ public class SingleAccountModeFragment extends Fragment {
         // Creates a PublicClientApplication object with res/raw/auth_config_single_account.json
         PublicClientApplication.createSingleAccountPublicClientApplication(getContext(),
                 R.raw.auth_config_single_account,
-                new PublicClientApplication.ApplicationCreatedListener() {
+                new IPublicClientApplication.ISingleAccountApplicationCreatedListener() {
                     @Override
-                    public void onCreated(IPublicClientApplication application) {
-
+                    public void onCreated(ISingleAccountPublicClientApplication application) {
                         /**
                          * This test app assumes that the app is only going to support one account.
                          * If the device is not marked as shared, This requires "account_mode" : "SINGLE" in the config json file.
                          * In shared mode, MSAL will only returns ISingleAccountPublicClientApplication.
                          **/
-                        mSingleAccountApp = (ISingleAccountPublicClientApplication) application;
+                        mSingleAccountApp = application;
 
                         /**
                          * Use this isSharedDevice() flag to adjust your UI accordingly in shared mode.

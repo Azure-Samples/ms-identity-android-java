@@ -66,25 +66,19 @@ public class MultipleAccountModeFragment extends Fragment {
         // Creates a PublicClientApplication object with res/raw/auth_config_single_account.json
         PublicClientApplication.createMultipleAccountPublicClientApplication(getContext(),
                 R.raw.auth_config_multiple_account,
-                new PublicClientApplication.ApplicationCreatedListener() {
+                new IPublicClientApplication.IMultipleAccountApplicationCreatedListener() {
                     @Override
-                    public void onCreated(IPublicClientApplication application) {
-
-                        if (application instanceof IMultipleAccountPublicClientApplication) {
-                            mMultipleAccountApp = (IMultipleAccountPublicClientApplication) application;
-                            loadAccount();
-                        } else {
-                            /* If the device is in shared mode, it will ALWAYS return ISingleAccountPublicClientApplication. */
-                            logTextView.setText("Device is in shared mode. Please switch to 'Single Account' mode.");
-                            removeAccountButton.setEnabled(false);
-                            callGraphApiInteractiveButton.setEnabled(false);
-                            callGraphApiSilentButton.setEnabled(false);
-                        }
+                    public void onCreated(IMultipleAccountPublicClientApplication application) {
+                        mMultipleAccountApp = application;
+                        loadAccount();
                     }
 
                     @Override
                     public void onError(MsalException exception) {
-                        logTextView.setText(exception.toString());
+                        logTextView.setText("Device is in shared mode. Please switch to 'Single Account' mode.");
+                        removeAccountButton.setEnabled(false);
+                        callGraphApiInteractiveButton.setEnabled(false);
+                        callGraphApiSilentButton.setEnabled(false);
                     }
                 });
 
