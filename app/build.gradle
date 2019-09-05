@@ -40,6 +40,6 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
     localImplementation project(':msal')
-    externalImplementation 'com.microsoft.identity.client:msal:1.0.0-RC4'
+    externalImplementation 'com.microsoft.identity.client:msal:1.0.0-RC6'
 
 }

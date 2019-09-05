@@ -27,6 +27,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <!-- Add in your scheme/host from registered redirect URI -->
+                <!-- note that the leading "/" is required for android:path-->
                 <data
                     android:host="com.azuresamples.msalandroidapp"
                     android:path="/1wIqXSqBj7w+h11ZifsnqwgyKrY="
