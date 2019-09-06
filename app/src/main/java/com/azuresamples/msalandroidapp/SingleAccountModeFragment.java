@@ -118,7 +118,7 @@ public class SingleAccountModeFragment extends Fragment {
                     return;
                 }
 
-                mSingleAccountApp.signIn(getActivity(), getScopes(), getAuthInteractiveCallback());
+                mSingleAccountApp.signIn(getActivity(), null, getScopes(), getAuthInteractiveCallback());
             }
         });
 
