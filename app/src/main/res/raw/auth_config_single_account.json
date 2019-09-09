@@ -4,6 +4,7 @@
   "redirect_uri" : "msauth://com.azuresamples.msalandroidapp/1wIqXSqBj7w%2Bh11ZifsnqwgyKrY%3D",
   "account_mode" : "SINGLE",
   "broker_redirect_uri_registered": true,
+  "shared_device_mode_supported": true,
   "authorities" : [
     {
       "type": "AAD",
