@@ -1,5 +1,21 @@
 apply plugin: 'com.android.application'
 
+allprojects {
+    repositories {
+        mavenLocal()
+        google()
+        maven {
+            name "vsts-maven-adal-android"
+            url "https://identitydivision.pkgs.visualstudio.com/_packaging/AndroidADAL/maven/v1"
+            credentials {
+                username System.getenv("ENV_VSTS_MVN_ANDROIDADAL_USERNAME") != null ? System.getenv("ENV_VSTS_MVN_ANDROIDADAL_USERNAME") : project.findProperty("vstsUsername")
+                password System.getenv("ENV_VSTS_MVN_ANDROIDADAL_ACCESSTOKEN") != null ? System.getenv("ENV_VSTS_MVN_ANDROIDADAL_ACCESSTOKEN") : project.findProperty("vstsMavenAccessToken")
+            }
+        }
+        jcenter()
+    }
+}
+
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
@@ -39,7 +55,7 @@ dependencies {
     implementation 'com.android.volley:volley:1.1.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
-    localImplementation project(':msal')
+    //localImplementation project(':msal')
     externalImplementation 'com.microsoft.identity.client:msal:1.0.0-RC7'
 
 }
