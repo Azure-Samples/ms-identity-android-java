@@ -114,30 +114,6 @@
                     android:text="None" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:weightSum="10">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="3"
-                    android:textStyle="bold"
-                    android:text="Device Mode" />
-
-                <TextView
-                    android:id="@+id/device_mode"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="5dp"
-                    android:layout_weight="7"
-                    android:text="Non-shared" />
-            </LinearLayout>
-
 
             <LinearLayout
                 android:layout_width="match_parent"

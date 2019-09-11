@@ -75,7 +75,7 @@ public class MultipleAccountModeFragment extends Fragment {
 
                     @Override
                     public void onError(MsalException exception) {
-                        logTextView.setText("Device is in shared mode. Please switch to 'Single Account' mode.");
+                        logTextView.setText(exception.getMessage());
                         removeAccountButton.setEnabled(false);
                         callGraphApiInteractiveButton.setEnabled(false);
                         callGraphApiSilentButton.setEnabled(false);

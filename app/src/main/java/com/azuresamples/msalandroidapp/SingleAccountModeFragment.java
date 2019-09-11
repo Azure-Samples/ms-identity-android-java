@@ -53,7 +53,6 @@ public class SingleAccountModeFragment extends Fragment {
     TextView graphResourceTextView;
     TextView logTextView;
     TextView currentUserTextView;
-    TextView deviceModeTextView;
 
     /* Azure AD Variables */
     private ISingleAccountPublicClientApplication mSingleAccountApp;
@@ -74,18 +73,9 @@ public class SingleAccountModeFragment extends Fragment {
                     public void onCreated(ISingleAccountPublicClientApplication application) {
                         /**
                          * This test app assumes that the app is only going to support one account.
-                         * If the device is not marked as shared, This requires "account_mode" : "SINGLE" in the config json file.
-                         * In shared mode, MSAL will only returns ISingleAccountPublicClientApplication.
+                         * This requires "account_mode" : "SINGLE" in the config json file.
                          **/
                         mSingleAccountApp = application;
-
-                        /**
-                         * Use this isSharedDevice() flag to adjust your UI accordingly in shared mode.
-                         * */
-                        deviceModeTextView.setText(mSingleAccountApp.isSharedDevice() ?
-                                "Shared" :
-                                "Non-Shared");
-
                         loadAccount();
                     }
 
@@ -110,7 +100,6 @@ public class SingleAccountModeFragment extends Fragment {
         graphResourceTextView = view.findViewById(R.id.msgraph_url);
         logTextView = view.findViewById(R.id.txt_log);
         currentUserTextView = view.findViewById(R.id.current_user);
-        deviceModeTextView = view.findViewById(R.id.device_mode);
 
         signInButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
