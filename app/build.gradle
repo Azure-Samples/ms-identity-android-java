@@ -2,8 +2,9 @@ apply plugin: 'com.android.application'
 
 allprojects {
     repositories {
-        mavenLocal()
+        mavenCentral()
         google()
+        mavenLocal()
         maven {
             name "vsts-maven-adal-android"
             url "https://identitydivision.pkgs.visualstudio.com/_packaging/AndroidADAL/maven/v1"
