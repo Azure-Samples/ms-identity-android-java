@@ -81,7 +81,7 @@ public class SingleAccountModeFragment extends Fragment {
 
                     @Override
                     public void onError(MsalException exception) {
-                        logTextView.setText(exception.toString());
+                        displayError(exception);
                     }
                 });
 
@@ -142,12 +142,12 @@ public class SingleAccountModeFragment extends Fragment {
                 }
 
                 /**
-                 * If acquireTokenSilent() returns an error that requires an interaction,
+                 * If acquireTokenSilent() returns an error that requires an interaction (MsalUiRequiredException),
                  * invoke acquireToken() to have the user resolve the interrupt interactively.
                  *
                  * Some example scenarios are
                  *  - password change
-                 *  - the resource you're acquiring a token for has a stricter set of requirement than your SSO refresh token.
+                 *  - the resource you're acquiring a token for has a stricter set of requirement than your Single Sign-On refresh token.
                  *  - you're introducing a new scope which the user has never consented for.
                  */
                 mSingleAccountApp.acquireToken(getActivity(), getScopes(), getAuthInteractiveCallback());
@@ -202,6 +202,7 @@ public class SingleAccountModeFragment extends Fragment {
         mSingleAccountApp.getCurrentAccountAsync(new ISingleAccountPublicClientApplication.CurrentAccountCallback() {
             @Override
             public void onAccountLoaded(@Nullable IAccount activeAccount) {
+                // You can use the account data to update your UI or your app database.
                 updateUI(activeAccount);
             }
 
@@ -215,7 +216,7 @@ public class SingleAccountModeFragment extends Fragment {
 
             @Override
             public void onError(@NonNull MsalException exception) {
-                logTextView.setText(exception.toString());
+                displayError(exception);
             }
         });
     }
@@ -305,7 +306,7 @@ public class SingleAccountModeFragment extends Fragment {
      * Make an HTTP request to obtain MSGraph data
      */
     private void callGraphAPI(final IAuthenticationResult authenticationResult) {
-        MSGraphRequestWrapper.callGraphAPIWithVolley(
+        MSGraphRequestWrapper.callGraphAPIUsingVolley(
                 getContext(),
                 graphResourceTextView.getText().toString(),
                 authenticationResult.getAccessToken(),
@@ -353,7 +354,6 @@ public class SingleAccountModeFragment extends Fragment {
      * Updates UI based on the current account.
      */
     private void updateUI(@Nullable final IAccount account) {
-
         if (account != null) {
             signInButton.setEnabled(false);
             signOutButton.setEnabled(true);

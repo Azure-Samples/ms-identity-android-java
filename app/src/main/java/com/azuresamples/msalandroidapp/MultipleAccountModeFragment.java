@@ -75,7 +75,7 @@ public class MultipleAccountModeFragment extends Fragment {
 
                     @Override
                     public void onError(MsalException exception) {
-                        logTextView.setText(exception.getMessage());
+                        displayError(exception);
                         removeAccountButton.setEnabled(false);
                         callGraphApiInteractiveButton.setEnabled(false);
                         callGraphApiSilentButton.setEnabled(false);
@@ -188,13 +188,14 @@ public class MultipleAccountModeFragment extends Fragment {
         mMultipleAccountApp.getAccounts(new IPublicClientApplication.LoadAccountsCallback() {
             @Override
             public void onTaskCompleted(final List<IAccount> result) {
+                // You can use the account data to update your UI or your app database.
                 accountList = result;
                 updateUI(accountList);
             }
 
             @Override
             public void onError(MsalException exception) {
-                logTextView.setText(exception.toString());
+                displayError(exception);
             }
         });
     }
@@ -284,7 +285,7 @@ public class MultipleAccountModeFragment extends Fragment {
      * Make an HTTP request to obtain MSGraph data
      */
     private void callGraphAPI(final IAuthenticationResult authenticationResult) {
-        MSGraphRequestWrapper.callGraphAPIWithVolley(
+        MSGraphRequestWrapper.callGraphAPIUsingVolley(
                 getContext(),
                 graphResourceTextView.getText().toString(),
                 authenticationResult.getAccessToken(),

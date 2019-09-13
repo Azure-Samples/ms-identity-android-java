@@ -26,11 +26,11 @@ public class MSGraphRequestWrapper {
      *   2) an access token
      * to obtain MSGraph data.
      **/
-    public static void callGraphAPIWithVolley(@NonNull final Context context,
-                                              @NonNull final String graphResourceUrl,
-                                              @NonNull final String accessToken,
-                                              @NonNull final Response.Listener<JSONObject> responseListener,
-                                              @NonNull final Response.ErrorListener errorListener) {
+    public static void callGraphAPIUsingVolley(@NonNull final Context context,
+                                               @NonNull final String graphResourceUrl,
+                                               @NonNull final String accessToken,
+                                               @NonNull final Response.Listener<JSONObject> responseListener,
+                                               @NonNull final Response.ErrorListener errorListener) {
         Log.d(TAG, "Starting volley request to graph");
 
         /* Make sure we have a token to send to graph */
