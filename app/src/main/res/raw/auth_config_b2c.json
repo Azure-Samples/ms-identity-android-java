@@ -1,25 +1,21 @@
 {
-  "client_id": "<your_client_id_here>",
-  "redirect_uri": "<your_redirect_uri_here>",
+  "client_id" : "90c0fe63-bcf2-44d5-8fb7-b8bbc0b29dc6",
+  "redirect_uri" : "msauth://com.azuresamples.msalandroidapp/1wIqXSqBj7w%2Bh11ZifsnqwgyKrY%3D",
   "account_mode" : "MULTIPLE",
   "broker_redirect_uri_registered": false,
   "authorities": [
     {
       "type": "B2C",
-      "authority_url": "https://<your_b2c_tenant_hostname>/tfp/<your_tenant_name>/<your_1st_policy_name>/",
+      "authority_url": "https://fabrikamb2c.b2clogin.com/tfp/fabrikamb2c.onmicrosoft.com/b2c_1_susi/",
       "default": true
     },
     {
       "type": "B2C",
-      "authority_url": "https://<your_b2c_tenant_hostname>/tfp/<your_tenant_name>/<your_2nd_policy_name>/"
+      "authority_url": "https://fabrikamb2c.b2clogin.com/tfp/fabrikamb2c.onmicrosoft.com/b2c_1_edit_profile/"
     },
     {
       "type": "B2C",
-      "authority_url": "https://<your_b2c_tenant_hostname>/tfp/<your_tenant_name>/<your_3rd_policy_name>/"
-    },
-    {
-      "type": "B2C",
-      "authority_url": "https://<your_b2c_tenant_hostname>/tfp/<your_tenant_name>/<your_4th_policy_name>/"
+      "authority_url": "https://fabrikamb2c.b2clogin.com/tfp/fabrikamb2c.onmicrosoft.com/b2c_1_reset/"
     }
   ]
 }

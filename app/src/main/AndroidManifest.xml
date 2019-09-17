@@ -29,16 +29,10 @@
                 <!--
                     Add in your scheme/host from registered redirect URI
                     note that the leading "/" is required for android:path
-                    For Example:
-                    <data
-                        android:host="com.azuresamples.msalandroidapp"
-                        android:path="/1wIqXSqBj7w+h11ZifsnqwgyKrY="
-                        android:scheme="msauth" />
                 -->
-
                 <data
-                    android:host="YOUR_PACKAGE_NAME - must be registered at https://aka.ms/MobileAppReg"
-                    android:path="/YOUR_DECODED_SIGNATURE_HASH - must be registered at https://aka.ms/MobileAppReg"
+                    android:host="com.azuresamples.msalandroidapp"
+                    android:path="/1wIqXSqBj7w+h11ZifsnqwgyKrY="
                     android:scheme="msauth" />
             </intent-filter>
         </activity>

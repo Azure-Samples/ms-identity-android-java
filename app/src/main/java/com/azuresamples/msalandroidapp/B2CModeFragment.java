@@ -32,67 +32,6 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * The value in this class has to map with the json configuration file (auth_config_b2c.json).
- * i.e. If you are using the following json file.
- * {
- * "client_id": "<your_client_id_here>",
- * "redirect_uri": "<your_redirect_uri_here>",
- * "authorities": [{
- * "type": "B2C",
- * "authority_url": "https://contoso.b2clogin.com/tfp/contoso.onmicrosoft.com/B2C_1_SISOPolicy/",
- * "default": true
- * },
- * {
- * "type": "B2C",
- * "authority_url": "https://contoso.b2clogin.com/tfp/contoso.onmicrosoft.com/B2C_1_EditProfile/"
- * }]
- * }
- * <p>
- * This file contains 2 B2C policies, namely "B2C_1_SISOPolicy" and "B2C_1_EditProfile"
- * Its azureAdB2CHostName is "contoso.b2clogin.com"
- * Its tenantName is "contoso.onmicrosoft.com"
- */
-class B2CConfiguration {
-    /**
-     * Name of the policies/user flows in your B2C tenant.
-     * See https://docs.microsoft.com/en-us/azure/active-directory-b2c/active-directory-b2c-reference-policies for more info.
-     */
-    public final static String[] Policies = {
-            "<your_1st_policy_name>",
-            "<your_2nd_policy_name>",
-            "<your_3rd_policy_name>",
-            "<your_4th_policy_name>"
-    };
-
-    /**
-     * Name of your B2C tenant hostname.
-     */
-    final static String azureAdB2CHostName = "<your_b2c_tenant_hostname>";
-
-    /**
-     * Name of your B2C tenant.
-     */
-    final static String tenantName = "<your_tenant_hostname>";
-
-    /**
-     * Constructs an authority for the given policy name.
-     */
-    public static String getAuthorityFromPolicyName(final String policyName) {
-        return "https://" + azureAdB2CHostName + "/tfp/" + tenantName + "/" + policyName + "/";
-    }
-
-    /**
-     * An array of scopes you wish to acquire as part of the returned token result.
-     * These scopes must be added in your B2C application page.
-     */
-    public static List<String> getScopes() {
-        return Arrays.asList(
-                "<your_1st_scope>",
-                "<your_2nd_scope>");
-    }
-}
-
-/**
  * Implementation sample for 'B2C' mode.
  */
 public class B2CModeFragment extends Fragment {
