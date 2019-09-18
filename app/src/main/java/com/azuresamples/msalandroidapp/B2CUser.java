@@ -92,7 +92,9 @@ public class B2CUser {
             }
         }
 
-        callback.onError(new MsalUiRequiredException("Account associated to the policy is not found."));
+        callback.onError(
+                new MsalUiRequiredException(MsalUiRequiredException.NO_ACCOUNT_FOUND,
+                "Account associated to the policy is not found."));
     }
 
     /**
@@ -126,7 +128,14 @@ public class B2CUser {
      * See https://docs.microsoft.com/en-us/azure/active-directory-b2c/active-directory-b2c-reference-tokens for more info.
      */
     private static String getB2CPolicyNameFromAccount(@NonNull final IAccount account) {
-        return (String) (account.getClaims().get("tfp"));
+        final String policyName = (String) (account.getClaims().get("tfp"));
+
+        if (policyName == null) {
+            // Fallback to "acr" (for older policies)
+            return (String) (account.getClaims().get("acr"));
+        }
+
+        return policyName;
     }
 
     /**
