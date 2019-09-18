@@ -26,18 +26,20 @@ public class B2CUser {
 
         for (IAccount account : accounts) {
             /**
-             * IMPORTANT: an account object will be created for every policies the user has successfully performed.
-             *            You can use the 'Subject' claim to identify that those accounts belong to the same user.
+             * NOTE: Because B2C treats each policy as a separate authority, the access tokens, refresh tokens, and id tokens returned from each policy are considered logically separate entities.
+             *       In practical terms, this means that each policy returns a separate IAccount object whose tokens cannot be used to invoke other policies.
+             *
+             *       You can use the 'Subject' claim to identify that those accounts belong to the same user.
              */
             final String subject = B2CUser.getSubjectFromAccount(account);
 
             B2CUser user = b2CUserHashMap.get(subject);
             if (user == null) {
                 user = new B2CUser();
+                b2CUserHashMap.put(subject, user);
             }
 
             user.accounts.add(account);
-            b2CUserHashMap.put(subject, user);
         }
 
         List<B2CUser> users = new ArrayList<>();

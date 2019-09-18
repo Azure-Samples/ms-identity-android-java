@@ -54,14 +54,16 @@ public class B2CConfiguration {
     final static String tenantName = "fabrikamb2c.onmicrosoft.com";
 
     /**
-     * Constructs an authority for the given policy name.
+     * Returns an authority for the given policy name.
+     *
+     * @param policyName name of a B2C policy.
      */
     public static String getAuthorityFromPolicyName(final String policyName) {
         return "https://" + azureAdB2CHostName + "/tfp/" + tenantName + "/" + policyName + "/";
     }
 
     /**
-     * An array of scopes you wish to acquire as part of the returned token result.
+     * Returns an array of scopes you wish to acquire as part of the returned token result.
      * These scopes must be added in your B2C application page.
      */
     public static List<String> getScopes() {

@@ -70,7 +70,7 @@ public class MultipleAccountModeFragment extends Fragment {
                     @Override
                     public void onCreated(IMultipleAccountPublicClientApplication application) {
                         mMultipleAccountApp = application;
-                        loadAccount();
+                        loadAccounts();
                     }
 
                     @Override
@@ -114,7 +114,7 @@ public class MultipleAccountModeFragment extends Fragment {
                                         .show();
 
                                 /* Reload account asynchronously to get the up-to-date list. */
-                                loadAccount();
+                                loadAccounts();
                             }
 
                             @Override
@@ -177,10 +177,9 @@ public class MultipleAccountModeFragment extends Fragment {
     }
 
     /**
-     * Load the currently signed-in account, if there's any.
-     * In the shared device mode, if the user is signed out from the device, the app can also perform the clean-up work in onAccountChanged().
+     * Load currently signed-in accounts, if there's any.
      */
-    private void loadAccount() {
+    private void loadAccounts() {
         if (mMultipleAccountApp == null) {
             return;
         }
@@ -257,7 +256,7 @@ public class MultipleAccountModeFragment extends Fragment {
                 callGraphAPI(authenticationResult);
 
                 /* Reload account asynchronously to get the up-to-date list. */
-                loadAccount();
+                loadAccounts();
             }
 
             @Override

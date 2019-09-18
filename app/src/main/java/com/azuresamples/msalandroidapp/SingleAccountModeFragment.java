@@ -192,7 +192,6 @@ public class SingleAccountModeFragment extends Fragment {
 
     /**
      * Load the currently signed-in account, if there's any.
-     * In the shared device mode, if the user is signed out from the device, the app can also perform the clean-up work in onAccountChanged().
      */
     private void loadAccount() {
         if (mSingleAccountApp == null) {

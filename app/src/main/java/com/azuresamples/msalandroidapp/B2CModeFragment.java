@@ -28,7 +28,6 @@ import com.microsoft.identity.client.exception.MsalServiceException;
 import com.microsoft.identity.client.exception.MsalUiRequiredException;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -65,7 +64,7 @@ public class B2CModeFragment extends Fragment {
                     @Override
                     public void onCreated(IMultipleAccountPublicClientApplication application) {
                         mB2cApp = application;
-                        loadAccount();
+                        loadAccounts();
                     }
 
                     @Override
@@ -157,7 +156,7 @@ public class B2CModeFragment extends Fragment {
                             @Override
                             public void onRemoved() {
                                 logTextView.setText("Signed Out.");
-                                loadAccount();
+                                loadAccounts();
                             }
 
                             @Override
@@ -170,9 +169,9 @@ public class B2CModeFragment extends Fragment {
     }
 
     /**
-     * Load the currently signed-in account, if there's any.
+     * Load signed-in accounts, if there's any.
      */
-    private void loadAccount() {
+    private void loadAccounts() {
         if (mB2cApp == null) {
             return;
         }
@@ -247,7 +246,7 @@ public class B2CModeFragment extends Fragment {
                 displayResult(authenticationResult);
 
                 /* Reload account asynchronously to get the up-to-date list. */
-                loadAccount();
+                loadAccounts();
             }
 
             @Override
