@@ -74,52 +74,25 @@ public class B2CUser {
      * Acquires a token without interrupting the user.
      */
     public void acquireTokenSilentAsync(final IMultipleAccountPublicClientApplication multipleAccountPublicClientApplication,
+                                        final String policyName,
                                         final List<String> scopes,
                                         final SilentAuthenticationCallback callback) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                MsalUiRequiredException uiRequiredException = null;
-                for (IAccount account : accounts) {
-                    try {
-                        AcquireTokenSilentParameters parameters = new AcquireTokenSilentParameters.Builder()
-                                .fromAuthority(B2CConfiguration.getAuthorityFromPolicyName(getB2CPolicyNameFromAccount(account)))
-                                .withScopes(scopes)
-                                .forAccount(account)
-                                .build();
 
-                        callback.onSuccess(multipleAccountPublicClientApplication.acquireTokenSilent(parameters));
-                        return;
-                    } catch (MsalException e) {
-                        /**
-                         * If your app supports multiple B2C flows,
-                         * you'll receive MsalUiRequiredException if you perform acquireTokenSilent with the account that wasn't granted the same set of scope you're requesting for.
-                         *
-                         * i.e. if you have signed in the user interactively with two flows and the following scopes.
-                         *  1. Policy A : read
-                         *  2. Policy B : read, user_impersonation
-                         *
-                         * If you're going to acquire token silently with [read, user_impersonation],
-                         * then you have to make a request with the account associated with Policy B.
-                         * Making a request with Policy A's account would result in MsalUiRequiredException.
-                         *
-                         * To optimize this, you can keep track of accounts and scopes they were requested for.
-                         * */
-                        if (e instanceof MsalUiRequiredException) {
-                            uiRequiredException = (MsalUiRequiredException) e;
-                            continue;
-                        }
+        for (IAccount account: accounts){
+            if (policyName.equalsIgnoreCase(getB2CPolicyNameFromAccount(account))){
+                AcquireTokenSilentParameters parameters = new AcquireTokenSilentParameters.Builder()
+                        .fromAuthority(B2CConfiguration.getAuthorityFromPolicyName(policyName))
+                        .withScopes(scopes)
+                        .forAccount(account)
+                        .withCallback(callback)
+                        .build();
 
-                        callback.onError(e);
-                        return;
-                    } catch (InterruptedException e) {
-                        // Unexpected.
-                    }
-                }
-
-                callback.onError(uiRequiredException);
+                multipleAccountPublicClientApplication.acquireTokenSilentAsync(parameters);
+                return;
             }
-        }).start();
+        }
+
+        callback.onError(new MsalUiRequiredException("Account associated to the policy is not found."));
     }
 
     /**
@@ -145,6 +118,8 @@ public class B2CUser {
             }
         }).start();
     }
+
+
 
     /**
      * Get name of the policy associated with the given B2C account.

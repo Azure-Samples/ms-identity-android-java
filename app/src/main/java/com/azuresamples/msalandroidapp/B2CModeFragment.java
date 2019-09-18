@@ -139,6 +139,7 @@ public class B2CModeFragment extends Fragment {
 
                 final B2CUser selectedUser = users.get(b2cUserList.getSelectedItemPosition());
                 selectedUser.acquireTokenSilentAsync(mB2cApp,
+                        policyListSpinner.getSelectedItem().toString(),
                         B2CConfiguration.getScopes(),
                         getAuthSilentCallback());
             }
