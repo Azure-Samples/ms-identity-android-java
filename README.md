@@ -192,7 +192,7 @@ The following files have code that would be of interest to you
           mSingleAccountApp.acquireToken(getActivity(), getScopes(), getAuthInteractiveCallback());
           ```
 
-     4. Call Graph content:
+     4. Calling Graph API to get basic user details and displaying data:
            
           ```
           private void callGraphAPI(final IAuthenticationResult authenticationResult) {
