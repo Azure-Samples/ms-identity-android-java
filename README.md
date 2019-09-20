@@ -51,6 +51,9 @@ Microsoft provides applications for every mobile platform that allow for the bri
 
 The MSAL for Android will automatically use the broker if they are present on the device. Brokers can only be invoked via MSAL.
 
+> [!NOTE]
+> If you have older versions of Microsoft Authenticator app or [Company portal app](https://docs.microsoft.com/en-us/intune-user-help/install-and-sign-in-to-the-intune-company-portal-app-ios) installed in your device this sample application will run, but the user will not be able to test Single sign-on scenarios. Please make sure that you are installing the latest version of Microsoft Authenticator or Company Portal on your device.
+
 ### Single Account Mode
 
 In the `Single Account` Mode, only one user can sign into the application at a time. If the app wants to support just one signed-in user, it is recommended to use the `Single Account` Mode.
@@ -115,9 +118,6 @@ To run this sample, you'll need:
 * An internet connection
 * [Azure AD Tenant](https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-create-new-tenant)
 
-> [!NOTE]
-> If you have older versions of Microsoft Authenticator app or [Company portal app](https://docs.microsoft.com/en-us/intune-user-help/install-and-sign-in-to-the-intune-company-portal-app-ios) installed in your device this sample app doesn't run on your device. Please make sure that you are installing the latest version of Microsoft Authenticator or Company Portal on your device.
-
 ## Steps to Run the app
 
 ### Step 1: Register your App  
@@ -125,79 +125,80 @@ To run this sample, you'll need:
 To begin registering your app, start at the [Azure portal](https://aka.ms/MobileAppReg)
 
 To create an app registration,  
-1. Click `New Registration`. 
 
-1. Name your app, select the audience you're targeting, and click `Register`. 
+1. Click `New Registration`.
+
+1. Name your app, select the audience you're targeting, and click `Register`.
 
 1. In the `Overview` > `Sign in users in 5 minutes` > `Android`.
-    - Click on `Make this changes for me`. 
-    - Enter the Package Name from your Android Manifest. 
-    - Generate a Signature Hash. Follow the instructions in the portal.
+    * Click on `Make this changes for me`.
+    * Enter the Package Name from your Android Manifest.
+    * Generate a Signature Hash. Follow the instructions in the portal.
 
-1. Hit the `Make updates` button. Store the ***MSAL Configuration*** as it is used later in AndoridManifest.xml and auth_config.json. 
+1. Hit the `Make updates` button. Store the ***MSAL Configuration*** as it is used later in AndroidManifest.xml and auth_config.json.
 
-### Step 2: Clone the code. 
+### Step 2: Clone the code
+
+  ```shell
+   git clone https://github.com/Azure-Samples/ms-identity-android-java.git 
 
   ```
-   git clone https://github.com/Azure-Samples/ms-identity-android-java.git 
-  ```   
+
    The following steps have been carried out for android studio. But you can choose and work with any editor of your choice.
 
-   Open Android Studio, and select *open an existing Android Studio project*. Find the cloned project and open it. 
+   Open Android Studio, and select *open an existing Android Studio project*. Find the cloned project and open it.
 
-### Step 3: Configure the sample code in `auth_config.json` and `AndroidManifest.xml`.
+### Step 3: Configure the sample code in `auth_config.json` and `AndroidManifest.xml`
 
-   - Copy and paste the ***MSAL Configuration*** JSON from the Azure portal into `auth_config.json`. 
-   - Inside the `AndroidManifest.xml`, replace `android:host` and `android:path` with the same info saved in above step.
+* Copy and paste the ***MSAL Configuration*** JSON from the Azure portal into `auth_config.json`.
+* Inside the `AndroidManifest.xml`, replace `android:host` and `android:path` with the same info saved in above step.
         - `auth_config.json` contains this information as a reference inside the `redirect_uri` field.
-        - The Signature Hash should NOT be URL encoded in the `AndroidManifest.xml`. 
+        - The Signature Hash should NOT be URL encoded in the `AndroidManifest.xml`.
     Refer [Azure Active Directory Android Quickstart](https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-v2-android) for more details
-    
-   From menu, select *Build* > *Clean Project*. 
+
+From menu, select *Build* > *Clean Project*.
 
 ### Step 4: Run the sample
 
-   From menu, select *Run* > *Run 'app'*. 
+From menu, select *Run* > *Run 'app'*.
 
 ## About the code
 
-The following files have code that would be of interest to you
+The following files have code that would be of interest to you.
 
-1. SingleAccountModeFragment.java
+### SingleAccountModeFragment class
 
-   Contains code showing how the 'Single Account Mode' is implemented. The includes authentication, obtaining the token, and
+   Contains code showing how the `Single Account` Mode is implemented. The includes authentication, obtaining the token, and
    making a graph api call using the obtained token. Following steps gives you more details.
 
-     1. Create SingleAccount PublicClientApplication:
-      
-      ```
+   1. Create SingleAccount PublicClientApplication:
+
+      ```java
             PublicClientApplication.createSingleAccountPublicClientApplication(getContext(),
             R.raw.auth_config_single_account,
             new IPublicClientApplication.ISingleAccountApplicationCreatedListener() {
                 @Override
                 public void onCreated(ISingleAccountPublicClientApplication application) {
-                   mSingleAccountApp = application;
-                   ...
-     
+                    mSingleAccountApp = application;
+                    ...
+
       ```
 
+   2. Signing in user:
 
-     2. Signing in user:
-     
-         ```
+       ```java
           mSingleAccountApp.signIn(getActivity(), getScopes(), getAuthInteractiveCallback());
-         ```
-        
+       ```
 
-     3. Acquiring token:
+   3. Acquiring token:
 
-          ```
+       ```java
           mSingleAccountApp.acquireToken(getActivity(), getScopes(), getAuthInteractiveCallback());
-          ```
+       ```
 
-     4. Calling Graph API to get basic user details and displaying data:
-           
-          ```
+   4. Calling Graph API to get basic user details and displaying data:
+
+        ```java
           private void callGraphAPI(final IAuthenticationResult authenticationResult) {
                   MSGraphRequestWrapper.callGraphAPIWithVolley(
                           getContext(),
@@ -219,58 +220,58 @@ The following files have code that would be of interest to you
                               }
                           });
               }
-          ```
+        ```
 
-     5. Sign-out:
+   5. Sign-out
   
-          ```
+        ```java
           mSingleAccountApp.signOut(new ISingleAccountPublicClientApplication.SignOutCallback() {
                               @Override
                               public void onSignOut() {
                                   updateUI(null);
                                   performOperationOnSignOut();
                               }
-           ```  
-                                
+        ```  
 
-     6. Remove account:
-        
+   6. Remove account:
+
         When sign-out is performed it removes the signed-in account and cached tokens from this app (or device, if the device
         is in shared mode)
 
-2. MultipleAccountModeFragment.java
+### MultipleAccountModeFragment class
 
-   Contains code showing how the 'Multiple Account Mode' is implemented. The includes authentication and obtaining the
+   Contains code showing how the `Multiple Account` Mode is implemented. The includes authentication and obtaining the
    token, and making a graph api call using the obtained token.
 
-      1. Create MultipleAccount PublicClientApplication:
-          
-          ```
-          PublicClientApplication.createMultipleAccountPublicClientApplication(getContext(),
-                R.raw.auth_config_multiple_account,
-                new IPublicClientApplication.IMultipleAccountApplicationCreatedListener() {
-                    @Override
-                    public void onCreated(IMultipleAccountPublicClientApplication application) {
-                        mMultipleAccountApp = application;
-                        loadAccount();
-                    }
-          ```
-          
-          Acquiring token and call graph are similar to the above class
+1. Create MultipleAccount PublicClientApplication:
 
-      2. Get Accounts:
-          ```
+    ```java
+    PublicClientApplication.createMultipleAccountPublicClientApplication(getContext(),
+        R.raw.auth_config_multiple_account,
+        new IPublicClientApplication.IMultipleAccountApplicationCreatedListener() {
+            @Override
+            public void onCreated(IMultipleAccountPublicClientApplication application) {
+                mMultipleAccountApp = application;
+                loadAccount();
+            }
+    ```
+
+    Acquiring token and call graph are similar to the above class.
+
+2. Get Accounts:
+
+    ```java
           mMultipleAccountApp.getAccounts(new IPublicClientApplication.LoadAccountsCallback() {
                       @Override
                       public void onTaskCompleted(final List<IAccount> result) {
                           accountList = result;
                           updateUI(accountList);
                       }
-          ```
-          
-      3. Sign-out:
-      
-          ```
+    ```
+
+3. Sign-out:
+
+    ```java
           mMultipleAccountApp.removeAccount(accountList.get(accountListSpinner.getSelectedItemPosition()),
                         new IMultipleAccountPublicClientApplication.RemoveAccountCallback() {
                             @Override
@@ -281,55 +282,59 @@ The following files have code that would be of interest to you
                                 /* Reload account asynchronously to get the up-to-date list. */
                                 loadAccount();
                             }
-          ```
+    ```
 
 ## Feedback, Community Help, and Support
 
-We use [Stack Overflow](http://stackoverflow.com/questions/tagged/msal) with the community to 
-provide support. We highly recommend you ask your questions on Stack Overflow first and browse 
-existing issues to see if someone has asked your question before. 
+We use [Stack Overflow](http://stackoverflow.com/questions/tagged/msal) with the community to
+provide support. We highly recommend you ask your questions on Stack Overflow first and browse
+existing issues to see if someone has asked your question before.
 
-If you find and bug or have a feature request, please raise the issue 
-on [GitHub Issues](../../issues). 
+If you find and bug or have a feature request, please raise the issue
+on [GitHub Issues](../../issues).
 
-To provide a recommendation, visit 
+To provide a recommendation, visit
 our [User Voice page](https://feedback.azure.com/forums/169401-azure-active-directory).
 
 ## Contribute
 
-We enthusiastically welcome contributions and feedback. You can clone the repo and start 
+We enthusiastically welcome contributions and feedback. You can clone the repo and start
 contributing now. Read our [Contribution Guide](Contributing.md) for more information.
 
-This project has adopted the 
-[Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). 
-For more information see 
-the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact 
+This project has adopted the
+[Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
+For more information see
+the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact
 [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
 
 ## Security Library
 
-This library controls how users sign-in and access services. We recommend you always take the 
-latest version of our library in your app when possible. We 
-use [semantic versioning](http://semver.org) so you can control the risk associated with updating 
-your app. As an example, always downloading the latest minor version number (e.g. x.*y*.x) ensures 
-you get the latest security and feature enhanements but our API surface remains the same. You 
+This library controls how users sign-in and access services. We recommend you always take the
+latest version of our library in your app when possible. We
+use [semantic versioning](http://semver.org) so you can control the risk associated with updating
+your app. As an example, always downloading the latest minor version number (e.g. x.*y*.x) ensures
+you get the latest security and feature enhancements but our API surface remains the same. You
 can always see the latest version and release notes under the Releases tab of GitHub.
 
 ## Security Reporting
 
-If you find a security issue with our libraries or services please report it 
-to [secure@microsoft.com](mailto:secure@microsoft.com) with as much detail as possible. Your 
-submission may be eligible for a bounty through the [Microsoft Bounty](http://aka.ms/bugbounty) 
-program. Please do not post security issues to GitHub Issues or any other public site. We will 
-contact you shortly upon receiving the information. We encourage you to get notifications of when 
-security incidents occur by 
-visiting [this page](https://technet.microsoft.com/en-us/security/dd252948) and subscribing 
+If you find a security issue with our libraries or services please report it
+to [secure@microsoft.com](mailto:secure@microsoft.com) with as much detail as possible. Your
+submission may be eligible for a bounty through the [Microsoft Bounty](https://aka.ms/bugbounty)
+program. Please do not post security issues to GitHub Issues or any other public site. We will
+contact you shortly upon receiving the information. We encourage you to get notifications of when
+security incidents occur by
+visiting [this page](https://technet.microsoft.com/en-us/security/dd252948) and subscribing
 to Security Advisory Alerts.
 
 ## Other samples and documentation
-[FirstLine Worker documentation](link)
-- The documentation for the Microsoft identity platform is available from [https://aka.ms/aadv2](https://aka.ms/aadv2).
-- Other samples for the Microsoft identity platform are available from [https://aka.ms/aaddevsamplesv2](https://aka.ms/aaddevsamplesv2).
-- The conceptual documentation for MSAL Android is available from [https://aka.ms/msalandroid](https://aka.ms/msalandroid).
-- [Learn more about Brokers](https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-v1-enable-sso-android#single-sign-on-concepts)
 
+[FirstLine Worker documentation](link)
+
+* The documentation for the Microsoft identity platform is available from [https://aka.ms/aadv2](https://aka.ms/aadv2).
+
+* Other samples for the Microsoft identity platform are available from [https://aka.ms/aaddevsamplesv2](https://aka.ms/aaddevsamplesv2).
+
+* The conceptual documentation for MSAL Android is available from [https://aka.ms/msalandroid](https://aka.ms/msalandroid).
+
+* [Learn more about Brokers](https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-v1-enable-sso-android#single-sign-on-concepts)
