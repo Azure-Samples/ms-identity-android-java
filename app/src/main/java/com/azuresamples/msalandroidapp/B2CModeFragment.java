@@ -36,15 +36,14 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
+import com.microsoft.identity.client.AcquireTokenParameters;
 import com.microsoft.identity.client.AuthenticationCallback;
 import com.microsoft.identity.client.IAccount;
 import com.microsoft.identity.client.IAuthenticationResult;
 import com.microsoft.identity.client.IMultipleAccountPublicClientApplication;
 import com.microsoft.identity.client.IPublicClientApplication;
+import com.microsoft.identity.client.Prompt;
 import com.microsoft.identity.client.PublicClientApplication;
 import com.microsoft.identity.client.SilentAuthenticationCallback;
 import com.microsoft.identity.client.exception.MsalClientException;
@@ -52,48 +51,43 @@ import com.microsoft.identity.client.exception.MsalException;
 import com.microsoft.identity.client.exception.MsalServiceException;
 import com.microsoft.identity.client.exception.MsalUiRequiredException;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Implementation sample for 'Multiple account' mode.
+ * Implementation sample for 'B2C' mode.
  */
-public class MultipleAccountModeFragment extends Fragment {
-    private static final String TAG = SingleAccountModeFragment.class.getSimpleName();
-
-    /* Azure AD v2 Configs */
-    final static String AUTHORITY = "https://login.microsoftonline.com/common";
+public class B2CModeFragment extends Fragment {
+    private static final String TAG = B2CModeFragment.class.getSimpleName();
 
     /* UI & Debugging Variables */
     Button removeAccountButton;
-    Button callGraphApiInteractiveButton;
-    Button callGraphApiSilentButton;
-    TextView scopeTextView;
+    Button runUserFlowButton;
+    Button acquireTokenSilentButton;
     TextView graphResourceTextView;
     TextView logTextView;
-    Spinner accountListSpinner;
+    Spinner policyListSpinner;
+    Spinner b2cUserList;
+
+    private List<B2CUser> users;
 
     /* Azure AD Variables */
-    private IMultipleAccountPublicClientApplication mMultipleAccountApp;
-
-    private List<IAccount> accountList;
+    private IMultipleAccountPublicClientApplication b2cApp;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View view = inflater.inflate(R.layout.fragment_multiple_account_mode, container, false);
+        final View view = inflater.inflate(R.layout.fragment_b2c_mode, container, false);
         initializeUI(view);
 
         // Creates a PublicClientApplication object with res/raw/auth_config_single_account.json
         PublicClientApplication.createMultipleAccountPublicClientApplication(getContext(),
-                R.raw.auth_config_multiple_account,
+                R.raw.auth_config_b2c,
                 new IPublicClientApplication.IMultipleAccountApplicationCreatedListener() {
                     @Override
                     public void onCreated(IMultipleAccountPublicClientApplication application) {
-                        mMultipleAccountApp = application;
+                        b2cApp = application;
                         loadAccounts();
                     }
 
@@ -101,8 +95,8 @@ public class MultipleAccountModeFragment extends Fragment {
                     public void onError(MsalException exception) {
                         displayError(exception);
                         removeAccountButton.setEnabled(false);
-                        callGraphApiInteractiveButton.setEnabled(false);
-                        callGraphApiSilentButton.setEnabled(false);
+                        runUserFlowButton.setEnabled(false);
+                        acquireTokenSilentButton.setEnabled(false);
                     }
                 });
 
@@ -114,30 +108,78 @@ public class MultipleAccountModeFragment extends Fragment {
      */
     private void initializeUI(@NonNull final View view) {
         removeAccountButton = view.findViewById(R.id.btn_removeAccount);
-        callGraphApiInteractiveButton = view.findViewById(R.id.btn_callGraphInteractively);
-        callGraphApiSilentButton = view.findViewById(R.id.btn_callGraphSilently);
-        scopeTextView = view.findViewById(R.id.scope);
+        runUserFlowButton = view.findViewById(R.id.btn_runUserFlow);
+        acquireTokenSilentButton = view.findViewById(R.id.btn_acquireTokenSilently);
         graphResourceTextView = view.findViewById(R.id.msgraph_url);
         logTextView = view.findViewById(R.id.txt_log);
-        accountListSpinner = view.findViewById(R.id.account_list);
+        policyListSpinner = view.findViewById(R.id.policy_list);
+        b2cUserList = view.findViewById(R.id.user_list);
 
-        removeAccountButton.setOnClickListener(new View.OnClickListener() {
+        final ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(
+                getContext(), android.R.layout.simple_spinner_item,
+                new ArrayList<String>() {{
+                    for (final String policyName : B2CConfiguration.Policies)
+                        add(policyName);
+                }}
+        );
+
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        policyListSpinner.setAdapter(dataAdapter);
+        dataAdapter.notifyDataSetChanged();
+
+        runUserFlowButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if (mMultipleAccountApp == null) {
+                if (b2cApp == null) {
                     return;
                 }
 
                 /**
-                 * Removes the selected account and cached tokens from this app (or device, if the device is in shared mode).
+                 * Runs user flow interactively.
+                 * <p>
+                 * Once the user finishes with the flow, you will also receive an access token containing the claims for the scope you passed in (see B2CConfiguration.getScopes()),
+                 * which you can subsequently use to obtain your resources.
                  */
-                mMultipleAccountApp.removeAccount(accountList.get(accountListSpinner.getSelectedItemPosition()),
+
+                AcquireTokenParameters parameters = new AcquireTokenParameters.Builder()
+                        .startAuthorizationFromActivity(getActivity())
+                        .fromAuthority(B2CConfiguration.getAuthorityFromPolicyName(policyListSpinner.getSelectedItem().toString()))
+                        .withScopes(B2CConfiguration.getScopes())
+                        .withPrompt(Prompt.LOGIN)
+                        .withCallback(getAuthInteractiveCallback())
+                        .build();
+
+                b2cApp.acquireToken(parameters);
+
+            }
+        });
+
+        acquireTokenSilentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (b2cApp == null) {
+                    return;
+                }
+
+                final B2CUser selectedUser = users.get(b2cUserList.getSelectedItemPosition());
+                selectedUser.acquireTokenSilentAsync(b2cApp,
+                        policyListSpinner.getSelectedItem().toString(),
+                        B2CConfiguration.getScopes(),
+                        getAuthSilentCallback());
+            }
+        });
+
+        removeAccountButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (b2cApp == null) {
+                    return;
+                }
+
+                final B2CUser selectedUser = users.get(b2cUserList.getSelectedItemPosition());
+                selectedUser.signOutAsync(b2cApp,
                         new IMultipleAccountPublicClientApplication.RemoveAccountCallback() {
                             @Override
                             public void onRemoved() {
-                                Toast.makeText(getContext(), "Account removed.", Toast.LENGTH_SHORT)
-                                        .show();
-
-                                /* Reload account asynchronously to get the up-to-date list. */
+                                logTextView.setText("Signed Out.");
                                 loadAccounts();
                             }
 
@@ -148,72 +190,21 @@ public class MultipleAccountModeFragment extends Fragment {
                         });
             }
         });
-
-        callGraphApiInteractiveButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                if (mMultipleAccountApp == null) {
-                    return;
-                }
-
-                /**
-                 * Acquire token interactively. It will also create an account object for the silent call as a result (to be obtained by getAccount()).
-                 *
-                 * If acquireTokenSilent() returns an error that requires an interaction,
-                 * invoke acquireToken() to have the user resolve the interrupt interactively.
-                 *
-                 * Some example scenarios are
-                 *  - password change
-                 *  - the resource you're acquiring a token for has a stricter set of requirement than your SSO refresh token.
-                 *  - you're introducing a new scope which the user has never consented for.
-                 */
-                mMultipleAccountApp.acquireToken(getActivity(), getScopes(), getAuthInteractiveCallback());
-            }
-        });
-
-        callGraphApiSilentButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mMultipleAccountApp == null) {
-                    return;
-                }
-
-                /**
-                 * Performs acquireToken without interrupting the user.
-                 *
-                 * This requires an account object of the account you're obtaining a token for.
-                 * (can be obtained via getAccount()).
-                 */
-                mMultipleAccountApp.acquireTokenSilentAsync(getScopes(),
-                        accountList.get(accountListSpinner.getSelectedItemPosition()),
-                        AUTHORITY,
-                        getAuthSilentCallback());
-            }
-        });
-
     }
 
     /**
-     * Extracts a scope array from a text field,
-     * i.e. from "User.Read User.ReadWrite" to ["user.read", "user.readwrite"]
-     */
-    private String[] getScopes() {
-        return scopeTextView.getText().toString().toLowerCase().split(" ");
-    }
-
-    /**
-     * Load currently signed-in accounts, if there's any.
+     * Load signed-in accounts, if there's any.
      */
     private void loadAccounts() {
-        if (mMultipleAccountApp == null) {
+        if (b2cApp == null) {
             return;
         }
 
-        mMultipleAccountApp.getAccounts(new IPublicClientApplication.LoadAccountsCallback() {
+        b2cApp.getAccounts(new IPublicClientApplication.LoadAccountsCallback() {
             @Override
             public void onTaskCompleted(final List<IAccount> result) {
-                // You can use the account data to update your UI or your app database.
-                accountList = result;
-                updateUI(accountList);
+                users = B2CUser.getB2CUsersFromAccountList(result);
+                updateUI(users);
             }
 
             @Override
@@ -233,8 +224,8 @@ public class MultipleAccountModeFragment extends Fragment {
             public void onSuccess(IAuthenticationResult authenticationResult) {
                 Log.d(TAG, "Successfully authenticated");
 
-                /* Successfully got a token, use it to call a protected resource - MSGraph */
-                callGraphAPI(authenticationResult);
+                /* Successfully got a token. */
+                displayResult(authenticationResult);
             }
 
             @Override
@@ -266,10 +257,9 @@ public class MultipleAccountModeFragment extends Fragment {
             public void onSuccess(IAuthenticationResult authenticationResult) {
                 /* Successfully got a token, use it to call a protected resource - MSGraph */
                 Log.d(TAG, "Successfully authenticated");
-                Log.d(TAG, "ID Token: " + authenticationResult.getAccount().getClaims().get("id_token"));
 
-                /* call graph */
-                callGraphAPI(authenticationResult);
+                /* display result info */
+                displayResult(authenticationResult);
 
                 /* Reload account asynchronously to get the up-to-date list. */
                 loadAccounts();
@@ -277,6 +267,13 @@ public class MultipleAccountModeFragment extends Fragment {
 
             @Override
             public void onError(MsalException exception) {
+                final String B2C_PASSWORD_CHANGE = "AADB2C90118";
+                if (exception.getMessage().contains(B2C_PASSWORD_CHANGE)) {
+                    logTextView.setText("The user clicks the 'Forgot Password' link in a sign-up or sign-in user flow.\n" +
+                            "Your application needs to handle this error code by running a specific user flow that resets the password.");
+                    return;
+                }
+
                 /* Failed to acquireToken */
                 Log.d(TAG, "Authentication failed: " + exception.toString());
                 displayError(exception);
@@ -296,36 +293,11 @@ public class MultipleAccountModeFragment extends Fragment {
         };
     }
 
-    /**
-     * Make an HTTP request to obtain MSGraph data
-     */
-    private void callGraphAPI(final IAuthenticationResult authenticationResult) {
-        MSGraphRequestWrapper.callGraphAPIUsingVolley(
-                getContext(),
-                graphResourceTextView.getText().toString(),
-                authenticationResult.getAccessToken(),
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        /* Successfully called graph, process data and send to UI */
-                        Log.d(TAG, "Response: " + response.toString());
-                        displayGraphResult(response);
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d(TAG, "Error: " + error.toString());
-                        displayError(error);
-                    }
-                });
-    }
-
     //
     // Helper methods manage UI updates
     // ================================
-    // displayGraphResult() - Display the graph response
-    // displayError() - Display the graph response
+    // displayResult() - Display the authentication result.
+    // displayError() - Display the token error.
     // updateSignedInUI() - Updates UI when the user is signed in
     // updateSignedOutUI() - Updates UI when app sign out succeeds
     //
@@ -333,8 +305,14 @@ public class MultipleAccountModeFragment extends Fragment {
     /**
      * Display the graph response
      */
-    private void displayGraphResult(@NonNull final JSONObject graphResponse) {
-        logTextView.setText(graphResponse.toString());
+    private void displayResult(@NonNull final IAuthenticationResult result) {
+        final String output =
+                "Access Token :" + result.getAccessToken() + "\n" +
+                        "Scope : " + result.getScope() + "\n" +
+                        "Expiry : " + result.getExpiresOn() + "\n" +
+                        "Tenant ID : " + result.getTenantId() + "\n";
+
+        logTextView.setText(output);
     }
 
     /**
@@ -345,30 +323,29 @@ public class MultipleAccountModeFragment extends Fragment {
     }
 
     /**
-     * Updates UI based on the obtained account list.
+     * Updates UI based on the obtained user list.
      */
-    private void updateUI(@NonNull final List<IAccount> result) {
-
-        if (result.size() > 0) {
+    private void updateUI(final List<B2CUser> users) {
+        if (users.size() != 0) {
             removeAccountButton.setEnabled(true);
-            callGraphApiInteractiveButton.setEnabled(true);
-            callGraphApiSilentButton.setEnabled(true);
+            acquireTokenSilentButton.setEnabled(true);
         } else {
             removeAccountButton.setEnabled(false);
-            callGraphApiInteractiveButton.setEnabled(true);
-            callGraphApiSilentButton.setEnabled(false);
+            acquireTokenSilentButton.setEnabled(false);
         }
 
         final ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(
                 getContext(), android.R.layout.simple_spinner_item,
                 new ArrayList<String>() {{
-                    for (final IAccount account : result)
-                        add(account.getUsername());
+                    for (final B2CUser user : users)
+                        add(user.getDisplayName());
                 }}
         );
 
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        accountListSpinner.setAdapter(dataAdapter);
+        b2cUserList.setAdapter(dataAdapter);
         dataAdapter.notifyDataSetChanged();
     }
+
 }
+
