@@ -46,6 +46,7 @@ import com.microsoft.identity.client.IAuthenticationResult;
 import com.microsoft.identity.client.IMultipleAccountPublicClientApplication;
 import com.microsoft.identity.client.IPublicClientApplication;
 import com.microsoft.identity.client.PublicClientApplication;
+import com.microsoft.identity.client.SilentAuthenticationCallback;
 import com.microsoft.identity.client.exception.MsalClientException;
 import com.microsoft.identity.client.exception.MsalException;
 import com.microsoft.identity.client.exception.MsalServiceException;
@@ -225,8 +226,8 @@ public class MultipleAccountModeFragment extends Fragment {
     /**
      * Callback used in for silent acquireToken calls.
      */
-    private AuthenticationCallback getAuthSilentCallback() {
-        return new AuthenticationCallback() {
+    private SilentAuthenticationCallback getAuthSilentCallback() {
+        return new SilentAuthenticationCallback() {
 
             @Override
             public void onSuccess(IAuthenticationResult authenticationResult) {
@@ -249,12 +250,6 @@ public class MultipleAccountModeFragment extends Fragment {
                 } else if (exception instanceof MsalUiRequiredException) {
                     /* Tokens expired or no session, retry with interactive */
                 }
-            }
-
-            @Override
-            public void onCancel() {
-                /* User cancelled the authentication */
-                Log.d(TAG, "User cancelled login.");
             }
         };
     }
