@@ -21,7 +21,7 @@ urlFragment: msal-android-app
 
 The MSAL Android library gives your app the ability to begin using the [Microsoft identity platform](https://aka.ms/aaddev) by supporting [Azure Active Directory](https://azure.microsoft.com/services/active-directory/) and [Microsoft Accounts](https://account.microsoft.com) in a converged experience using industry standard OAuth2 and OpenID Connect protocols.
 
-This sample walks you through the process of integrating authentication with Microsoft Identity Platform (formerly Azure Active Directory for developers) in your android application. In this sample we'd achieve the following objectives and walk you through the code you need to write in the various lifecycle events.
+This sample walks you through the process of integrating authentication with Microsoft Identity Platform (formerly Azure Active Directory for developers) in your android application. In this sample we'd walk you through the code you need to write in the various lifecycle events of your app to achieve the following objectives.
 
 * Sign-in a user
 * Device-wide SSO and Conditional Access support through the Auth Broker
@@ -33,32 +33,32 @@ This sample walks you through the process of integrating authentication with Mic
 
 ## Scenario
 
-This sample app is a [multi-tenant](https://docs.microsoft.com/en-us/azure/active-directory/develop/setup-multi-tenant-app) app, which means that it can be used in any Azure AD tenant or by Microsoft Accounts.  It demonstrates how a developer can build apps to connect with enterprise users and access their Azure + O365 data via [Microsoft Graph](https://docs.microsoft.com/en-us/graph/overview).
+This sample app is a [multi-tenant](https://docs.microsoft.com/en-us/azure/active-directory/develop/setup-multi-tenant-app) app, which means that it can sign-in users from any Azure AD tenant and Microsoft Accounts.  It also demonstrates how a developer can build apps to connect with enterprise users and access their Azure + O365 data via [Microsoft Graph](https://docs.microsoft.com/en-us/graph/overview).
 During the auth flow, the users will be required to sign-in first, if its their first time signing-in to the app, the user would be asked to consent to the [permissions](https://docs.microsoft.com/en-us/azure/active-directory/develop/v1-permissions-and-consent) required by the application.
 
 The majority of the logic in this sample shows how to sign-in an end user and make a call to the Microsoft Graph to get basic information about the signed-in user.
 
 ![Flowchart](ReadmeFiles/image1.png)
 
-## Enabling Firstline Workers scenarios
+## Enabling Firstline Worker scenarios
 
-This app also demonstrates the [Single Account](link) and [Multiple Account](link) authentication modes available via the MSAL library. This is very useful for the **Firstline Workers** scenarios, where the `Single Account` Mode can be used to use the device in a `Shared Mode` amongst multiple first line workers who'd share the device.
+This app also demonstrates the [Single Account](link) and [Multiple Account](link) authentication modes available via the MSAL library. These are useful for the **Firstline Workers** scenarios, where the `Single Account` Mode can be used to set the device in a `Shared Mode` amongst multiple first line workers who'd share the device.
 
 ## Broker Authentication using MSAL
 
 Microsoft provides applications for every mobile platform that allow for the bridging of credentials across applications from different vendors and for enhanced features that require a single secure place from where to validate credentials. These are called brokers. The brokers available for Android are **Microsoft Authenticator** and **Company Portal**.
-[Learn more about Brokers](https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-v1-enable-sso-android#single-sign-on-concepts)
+[Learn more about Brokers here.](https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-v1-enable-sso-android#single-sign-on-concepts)
 
 The MSAL for Android will automatically use the broker if they are present on the device. Brokers can only be invoked via MSAL.
 
 > [!NOTE]
-> If you have older versions of Microsoft Authenticator app or [Company portal app](https://docs.microsoft.com/en-us/intune-user-help/install-and-sign-in-to-the-intune-company-portal-app-ios) installed in your device this sample application will run, but the user will not be able to test Single sign-on scenarios. Please make sure that you are installing the latest version of Microsoft Authenticator or Company Portal on your device.
+> If you have older versions of **Microsoft Authenticator** app or [Company portal app](https://docs.microsoft.com/en-us/intune-user-help/install-and-sign-in-to-the-intune-company-portal-app-ios) installed in the device where this sample application will be run, then the user will not be able to test the scenarios presented here. Please make sure that you have installed the latest version of Microsoft Authenticator or Company Portal on your device.
 
 ### Single Account Mode
 
 In the `Single Account` Mode, only one user can sign into the application at a time. If the app wants to support just one signed-in user, it is recommended to use the `Single Account` Mode.
 
-The following code snippet from **SingleAccountModeFragment** class shows how the application is set in the `Single Account` Mode in the code:
+The following code snippet from **SingleAccountModeFragment** class shows how the application is set to the `Single Account` Mode in the code:
 
 ```java
 PublicClientApplication.createSingleAccountPublicClientApplication(getContext(),
@@ -83,19 +83,17 @@ In the code, you can use the `isSharedDevice()` flag to determine if an applicat
 Code snippet from **SingleAccountModeFragment** class showing usage of the `isSharedDevice()` flag:
 
 ```Java
-deviceModeTextView.setText(mSingleAccountApp.isSharedDevice() ?
-                                "Shared" :
-                                "Non-Shared");
+deviceModeTextView.setText(mSingleAccountApp.isSharedDevice() ?"Shared" :"Non-Shared");
 ```
 
 > [!NOTE]
-> You can only put a device in to Shared Mode using the [Authenticator app](https://www.microsoft.com/en-us/account/authenticator) and with a user who is the [Cloud Device Administrator](https://docs.microsoft.com/en-us/azure/active-directory/users-groups-roles/directory-assign-admin-roles#cloud-device-administrator) role. You can configure the membership of your Organizational Roles by going to the Azure Portal and selecting:
-
- Azure Active Directory -> Roles and Administrators -> Cloud Device Administrator  
+> You can only put a device in to Shared Mode using the [Authenticator app](https://www.microsoft.com/en-us/account/authenticator) and with a user who is in the [Cloud Device Administrator](https://docs.microsoft.com/en-us/azure/active-directory/users-groups-roles/directory-assign-admin-roles#cloud-device-administrator) role. You can configure the membership of your Organizational Roles by going to the Azure Portal and selecting:
+>
+> Azure Active Directory -> Roles and Administrators -> Cloud Device Administrator  
 
 ## Multiple Account Mode
 
-In the `Multiple Account` Mode, the application supports multiple accounts and can switch between accounts of the user and get data from that account.
+In the `Multiple Account` Mode, the application supports multiple accounts and can switch between accounts of the user and get data from that user's account.
 
 Code snippet from **MultipleAccountModeFragment** class shows how the application is set in the `Multiple Account` Mode in the code:
 
@@ -106,9 +104,9 @@ PublicClientApplication.createMultipleAccountPublicClientApplication(getContext(
 
 > [!NOTE]
 > If you're writing an application that will only be used for Firstline Workers on shared devices, we recommend you write your application to  support only the `Single Account` Mode.
-> If your app also supports multiple accounts as well as shared device mode, you will have to perform type check (How ???) and cast to the appropriate interface to perform an operation.  
+> If your app also supports multiple accounts as well as shared device mode, you will have to perform type check (TODO//How ???) and cast to the appropriate interface to perform an operation.  
 
-For more information on the concepts used in this sample, be sure to read the [FirstLine Worker documentation](link)
+For more information on the concepts used in this sample, be sure to read the [FirstLine Worker documentation](TODO://link)
 
 ## How to run this sample
 
@@ -116,7 +114,8 @@ To run this sample, you'll need:
 
 * Android SDK
 * An internet connection
-* [Azure AD Tenant](https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-create-new-tenant)
+* An Azure Active Directory (Azure AD) tenant. For more information on how to get an Azure AD tenant, see [How to get an Azure AD tenant](https://azure.microsoft.com/en-us/documentation/articles/active-directory-howto-tenant/)
+* One or more user accounts in your Azure AD tenant.
 
 ## Steps to Run the app
 
@@ -135,13 +134,14 @@ To create an app registration,
     * Enter the Package Name from your Android Manifest.
     * Generate a Signature Hash. Follow the instructions in the portal.
 
-1. Hit the `Make updates` button. Store the ***MSAL Configuration*** as it is used later in AndroidManifest.xml and auth_config.json.
+1. Hit the `Make updates` button. Note the ***MSAL Configuration*** as it is used later in `AndroidManifest.xml` and `auth_config.json`.
 
 ### Step 2: Clone the code
 
-  ```shell
-   git clone https://github.com/Azure-Samples/ms-identity-android-java.git 
+  From your shell or command line:
 
+```Shell
+   git clone https://github.com/Azure-Samples/ms-identity-android-java.git
   ```
 
    The following steps have been carried out for android studio. But you can choose and work with any editor of your choice.
@@ -162,16 +162,19 @@ From menu, select *Build* > *Clean Project*.
 
 From menu, select *Run* > *Run 'app'*.
 
+//TODO: Explain how to sign-in and click around in the app to test the various modes and call to graph. (see https://github.com/Azure-Samples/active-directory-aspnetcore-webapp-openidconnect-v2/blob/master/5-WebApp-AuthZ/5-2-Groups/README.md for reference) 
+
 ## About the code
 
-The following files have code that would be of interest to you.
+The following files have the code that would be of interest to you.
 
 ### SingleAccountModeFragment class
 
-   Contains code showing how the `Single Account` Mode is implemented. The includes authentication, obtaining the token, and
-   making a graph api call using the obtained token. Following steps gives you more details.
+   Contains code showing how the `Single Account` Mode is implemented. The includes authentication, obtaining the token, and making a Graph api call using the obtained token. 
+   
+   The following steps give you more details.
 
-   1. Create SingleAccount PublicClientApplication:
+   1. Create a SingleAccount PublicClientApplication:
 
       ```java
             PublicClientApplication.createSingleAccountPublicClientApplication(getContext(),
@@ -184,7 +187,7 @@ The following files have code that would be of interest to you.
 
       ```
 
-   2. Signing in user:
+   2. Signing in a user:
 
        ```java
           mSingleAccountApp.signIn(getActivity(), getScopes(), getAuthInteractiveCallback());
@@ -235,15 +238,13 @@ The following files have code that would be of interest to you.
 
    6. Remove account:
 
-        When sign-out is performed it removes the signed-in account and cached tokens from this app (or device, if the device
-        is in shared mode)
+        When sign-out is performed it removes the signed-in account and cached tokens from this app (or device, if the device is in shared mode)
 
 ### MultipleAccountModeFragment class
 
-   Contains code showing how the `Multiple Account` Mode is implemented. The includes authentication and obtaining the
-   token, and making a graph api call using the obtained token.
+   Contains code showing how the `Multiple Account` Mode is implemented. The includes authentication and obtaining the token, and making a graph api call using the obtained token.
 
-1. Create MultipleAccount PublicClientApplication:
+1. Create a MultipleAccount PublicClientApplication:
 
     ```java
     PublicClientApplication.createMultipleAccountPublicClientApplication(getContext(),
