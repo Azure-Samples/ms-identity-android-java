@@ -48,7 +48,7 @@ public class B2CModeFragment extends Fragment {
     private List<B2CUser> users;
 
     /* Azure AD Variables */
-    private IMultipleAccountPublicClientApplication mB2cApp;
+    private IMultipleAccountPublicClientApplication b2cApp;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -63,7 +63,7 @@ public class B2CModeFragment extends Fragment {
                 new IPublicClientApplication.IMultipleAccountApplicationCreatedListener() {
                     @Override
                     public void onCreated(IMultipleAccountPublicClientApplication application) {
-                        mB2cApp = application;
+                        b2cApp = application;
                         loadAccounts();
                     }
 
@@ -105,7 +105,7 @@ public class B2CModeFragment extends Fragment {
 
         runUserFlowButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if (mB2cApp == null) {
+                if (b2cApp == null) {
                     return;
                 }
 
@@ -124,7 +124,7 @@ public class B2CModeFragment extends Fragment {
                         .withCallback(getAuthInteractiveCallback())
                         .build();
 
-                mB2cApp.acquireToken(parameters);
+                b2cApp.acquireToken(parameters);
 
             }
         });
@@ -132,12 +132,12 @@ public class B2CModeFragment extends Fragment {
         acquireTokenSilentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mB2cApp == null) {
+                if (b2cApp == null) {
                     return;
                 }
 
                 final B2CUser selectedUser = users.get(b2cUserList.getSelectedItemPosition());
-                selectedUser.acquireTokenSilentAsync(mB2cApp,
+                selectedUser.acquireTokenSilentAsync(b2cApp,
                         policyListSpinner.getSelectedItem().toString(),
                         B2CConfiguration.getScopes(),
                         getAuthSilentCallback());
@@ -146,12 +146,12 @@ public class B2CModeFragment extends Fragment {
 
         removeAccountButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if (mB2cApp == null) {
+                if (b2cApp == null) {
                     return;
                 }
 
                 final B2CUser selectedUser = users.get(b2cUserList.getSelectedItemPosition());
-                selectedUser.signOutAsync(mB2cApp,
+                selectedUser.signOutAsync(b2cApp,
                         new IMultipleAccountPublicClientApplication.RemoveAccountCallback() {
                             @Override
                             public void onRemoved() {
@@ -172,11 +172,11 @@ public class B2CModeFragment extends Fragment {
      * Load signed-in accounts, if there's any.
      */
     private void loadAccounts() {
-        if (mB2cApp == null) {
+        if (b2cApp == null) {
             return;
         }
 
-        mB2cApp.getAccounts(new IPublicClientApplication.LoadAccountsCallback() {
+        b2cApp.getAccounts(new IPublicClientApplication.LoadAccountsCallback() {
             @Override
             public void onTaskCompleted(final List<IAccount> result) {
                 users = B2CUser.getB2CUsersFromAccountList(result);
@@ -192,8 +192,6 @@ public class B2CModeFragment extends Fragment {
 
     /**
      * Callback used in for silent acquireToken calls.
-     * Looks if tokens are in the cache (refreshes if necessary and if we don't forceRefresh)
-     * else errors that we need to do an interactive request.
      */
     private AuthenticationCallback getAuthSilentCallback() {
         return new AuthenticationCallback() {

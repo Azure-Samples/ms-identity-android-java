@@ -64,6 +64,7 @@ public class B2CUser {
             return null;
         }
 
+        // Make sure that all of your policies are returning the same set of claims.
         final String displayName = getB2CDisplayNameFromAccount(accounts.get(0));
         if (displayName != null) {
             return displayName;
@@ -80,8 +81,8 @@ public class B2CUser {
                                         final List<String> scopes,
                                         final SilentAuthenticationCallback callback) {
 
-        for (IAccount account: accounts){
-            if (policyName.equalsIgnoreCase(getB2CPolicyNameFromAccount(account))){
+        for (IAccount account : accounts) {
+            if (policyName.equalsIgnoreCase(getB2CPolicyNameFromAccount(account))) {
                 AcquireTokenSilentParameters parameters = new AcquireTokenSilentParameters.Builder()
                         .fromAuthority(B2CConfiguration.getAuthorityFromPolicyName(policyName))
                         .withScopes(scopes)
@@ -96,7 +97,7 @@ public class B2CUser {
 
         callback.onError(
                 new MsalUiRequiredException(MsalUiRequiredException.NO_ACCOUNT_FOUND,
-                "Account associated to the policy is not found."));
+                        "Account associated to the policy is not found."));
     }
 
     /**
@@ -122,8 +123,6 @@ public class B2CUser {
             }
         }).start();
     }
-
-
 
     /**
      * Get name of the policy associated with the given B2C account.

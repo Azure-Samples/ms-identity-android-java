@@ -222,8 +222,6 @@ public class SingleAccountModeFragment extends Fragment {
 
     /**
      * Callback used in for silent acquireToken calls.
-     * Looks if tokens are in the cache (refreshes if necessary and if we don't forceRefresh)
-     * else errors that we need to do an interactive request.
      */
     private AuthenticationCallback getAuthSilentCallback() {
         return new AuthenticationCallback() {
