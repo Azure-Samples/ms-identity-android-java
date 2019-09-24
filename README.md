@@ -38,11 +38,11 @@ During the auth flow, the users will be required to sign-in first, if its their 
 
 The majority of the logic in this sample shows how to sign-in an end user and make a call to the Microsoft Graph to get basic information about the signed-in user.
 
-![Flowchart](ReadmeFiles/image1.png)
-
-## Enabling Firstline Worker scenarios
+### Enabling Firstline Workers scenario
 
 This app also demonstrates the [Single Account](link) and [Multiple Account](link) authentication modes available via the MSAL library. These are useful for the **Firstline Workers** scenarios, where the `Single Account` Mode can be used to set the device in a `Shared Mode` amongst multiple first line workers who'd share the device.
+
+![Flowchart](ReadmeFiles/image1.png)
 
 ## Broker Authentication using MSAL
 
@@ -114,16 +114,52 @@ To run this sample, you'll need:
 
 * Android SDK
 * An internet connection
+
+If you want to register your own application, you also need
+
 * An Azure Active Directory (Azure AD) tenant. For more information on how to get an Azure AD tenant, see [How to get an Azure AD tenant](https://azure.microsoft.com/en-us/documentation/articles/active-directory-howto-tenant/)
 * One or more user accounts in your Azure AD tenant.
 
 ## Steps to Run the app
 
-### Step 1: Register your App  
+### Step 1: Clone the code
+
+  From your shell or command line:
+
+```Shell
+   git clone https://github.com/Azure-Samples/ms-identity-android-java.git
+  ```
+
+   The following steps have been carried out for android studio. But you can choose and work with any editor of your choice.
+
+   Open Android Studio, and select *open an existing Android Studio project*. Find the cloned project and open it.
+
+### Step 2: Run the sample
+
+From menu, select *Run* > *Run 'app'*. Once the app launches,
+
+1. Click on the hamburger icon
+
+    * Single Account: Select this to explore Single Account Mode
+
+    * Multiple Account: Select this to explore Multiple Account Mode.
+
+1. Click on sign-in, it takes you to `add account` page.
+
+1. Add one or more accounts as per the device mode, and sign in with      the account you want to.
+
+1. After successful sign-in basic user details are displayed.
+
+Follow the on screen options to explore more.
+
+> [!NOTE]
+> This sample application is configured to run without registering your own application. To register your own application and run the sample with those settings, follow below steps.
+
+## Register your Own Application (Optional)  
 
 To begin registering your app, start at the [Azure portal](https://aka.ms/MobileAppReg)
 
-To create an app registration,  
+To **create** an app registration,  
 
 1. Click `New Registration`.
 
@@ -136,33 +172,16 @@ To create an app registration,
 
 1. Hit the `Make updates` button. Note the ***MSAL Configuration*** as it is used later in `AndroidManifest.xml` and `auth_config.json`.
 
-### Step 2: Clone the code
+**Configure** the sample application with your app registration by replacing the sample code in `auth_config.json` and `AndroidManifest.xml`
 
-  From your shell or command line:
+1. Copy and paste the ***MSAL Configuration*** JSON from the Azure portal into `auth_config.json`.
 
-```Shell
-   git clone https://github.com/Azure-Samples/ms-identity-android-java.git
-  ```
-
-   The following steps have been carried out for android studio. But you can choose and work with any editor of your choice.
-
-   Open Android Studio, and select *open an existing Android Studio project*. Find the cloned project and open it.
-
-### Step 3: Configure the sample code in `auth_config.json` and `AndroidManifest.xml`
-
-* Copy and paste the ***MSAL Configuration*** JSON from the Azure portal into `auth_config.json`.
-* Inside the `AndroidManifest.xml`, replace `android:host` and `android:path` with the same info saved in above step.
+1. Inside the `AndroidManifest.xml`, replace `android:host` and `android:path` with the same info saved in above step.
         - `auth_config.json` contains this information as a reference inside the `redirect_uri` field.
         - The Signature Hash should NOT be URL encoded in the `AndroidManifest.xml`.
     Refer [Azure Active Directory Android Quickstart](https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-v2-android) for more details
 
-From menu, select *Build* > *Clean Project*.
-
-### Step 4: Run the sample
-
-From menu, select *Run* > *Run 'app'*.
-
-//TODO: Explain how to sign-in and click around in the app to test the various modes and call to graph. (see https://github.com/Azure-Samples/active-directory-aspnetcore-webapp-openidconnect-v2/blob/master/5-WebApp-AuthZ/5-2-Groups/README.md for reference) 
+From menu, select *Build* > *Clean Project* and *Run* > *Run 'app'*.
 
 ## About the code
 
@@ -170,75 +189,82 @@ The following files have the code that would be of interest to you.
 
 ### SingleAccountModeFragment class
 
-   Contains code showing how the `Single Account` Mode is implemented. The includes authentication, obtaining the token, and making a Graph api call using the obtained token. 
-   
+   Contains code showing how the `Single Account` Mode is implemented. The includes authentication, obtaining the token, and making a Graph api call using the obtained token.
+
    The following steps give you more details.
 
-   1. Create a SingleAccount PublicClientApplication:
+1. Create a SingleAccount PublicClientApplication:
 
-      ```java
-            PublicClientApplication.createSingleAccountPublicClientApplication(getContext(),
-            R.raw.auth_config_single_account,
-            new IPublicClientApplication.ISingleAccountApplicationCreatedListener() {
-                @Override
-                public void onCreated(ISingleAccountPublicClientApplication application) {
-                    mSingleAccountApp = application;
-                    ...
+    ```java
+        PublicClientApplication.createSingleAccountPublicClientApplication(getContext(),
+        R.raw.auth_config_single_account,
+        new IPublicClientApplication.ISingleAccountApplicationCreatedListener() {
+            @Override
+            public void onCreated(ISingleAccountPublicClientApplication application) {
+                mSingleAccountApp = application;
+                ...
 
-      ```
+    ```
 
-   2. Signing in a user:
+2. Signing in a user:
 
-       ```java
-          mSingleAccountApp.signIn(getActivity(), getScopes(), getAuthInteractiveCallback());
-       ```
+    ```java
+        mSingleAccountApp.signIn(getActivity(), getScopes(), getAuthInteractiveCallback());
+    ```
 
-   3. Acquiring token:
+3. Acquiring token:
 
-       ```java
-          mSingleAccountApp.acquireToken(getActivity(), getScopes(), getAuthInteractiveCallback());
-       ```
+    * Interactive:
 
-   4. Calling Graph API to get basic user details and displaying data:
+    ```java
+            mSingleAccountApp.acquireToken(getActivity(), getScopes(),getAuthInteractiveCallback());
+    ```
 
-        ```java
-          private void callGraphAPI(final IAuthenticationResult authenticationResult) {
-                  MSGraphRequestWrapper.callGraphAPIWithVolley(
-                          getContext(),
-                          graphResourceTextView.getText().toString(),
-                          authenticationResult.getAccessToken(),
-                          new Response.Listener<JSONObject>() {
-                              @Override
-                              public void onResponse(JSONObject response) {
-                                  /* Successfully called graph, process data and send to UI */
-                                  Log.d(TAG, "Response: " + response.toString());
-                                  displayGraphResult(response);
-                              }
-                          },
-                          new Response.ErrorListener() {
-                              @Override
-                              public void onErrorResponse(VolleyError error) {
-                                  Log.d(TAG, "Error: " + error.toString());
-                                  displayError(error);
-                              }
-                          });
-              }
-        ```
+    * Silent:
 
-   5. Sign-out
-  
-        ```java
-          mSingleAccountApp.signOut(new ISingleAccountPublicClientApplication.SignOutCallback() {
-                              @Override
-                              public void onSignOut() {
-                                  updateUI(null);
-                                  performOperationOnSignOut();
-                              }
-        ```  
+    ```java
+        mSingleAccountApp.acquireToken(getActivity(), getScopes(), getAuthInteractiveCallback());
+    ```
 
-   6. Remove account:
+4. Calling Graph API to get basic user details and displaying data:
 
-        When sign-out is performed it removes the signed-in account and cached tokens from this app (or device, if the device is in shared mode)
+    ```java
+        private void callGraphAPI(final IAuthenticationResult authenticationResult) {
+                MSGraphRequestWrapper.callGraphAPIWithVolley(
+                        getContext(),
+                        graphResourceTextView.getText().toString(),
+                        authenticationResult.getAccessToken(),
+                        new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                /* Successfully called graph, process data and send to UI */
+                                Log.d(TAG, "Response: " + response.toString());
+                                displayGraphResult(response);
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Log.d(TAG, "Error: " + error.toString());
+                                displayError(error);
+                            }
+                        });
+            }
+    ```
+
+5. Sign-out:
+
+    ```java
+        mSingleAccountApp.signOut(new ISingleAccountPublicClientApplication.SignOutCallback() {
+                            @Override
+                            public void onSignOut() {
+                                updateUI(null);
+                                performOperationOnSignOut();
+                            }
+    ```  
+
+    When sign-out is performed it removes the signed-in account and cached tokens from this app (or device, if the device
+    is in shared mode)
 
 ### MultipleAccountModeFragment class
 
@@ -257,9 +283,24 @@ The following files have the code that would be of interest to you.
             }
     ```
 
-    Acquiring token and call graph are similar to the above class.
+2. Acquiring token:
 
-2. Get Accounts:
+    * Interactive:
+
+    ```java
+    mMultipleAccountApp.acquireToken(getActivity(), getScopes(), getAuthInteractiveCallback());
+    ```
+
+    * Silent:
+
+    ```java
+    mMultipleAccountApp.acquireTokenSilentAsync(getScopes(),
+                            accountList.get(accountListSpinner.getSelectedItemPosition()),
+                            AUTHORITY,
+                            getAuthSilentCallback());
+    ```
+
+3. Get Accounts:
 
     ```java
           mMultipleAccountApp.getAccounts(new IPublicClientApplication.LoadAccountsCallback() {
@@ -270,7 +311,7 @@ The following files have the code that would be of interest to you.
                       }
     ```
 
-3. Sign-out:
+4. Remove account:
 
     ```java
           mMultipleAccountApp.removeAccount(accountList.get(accountListSpinner.getSelectedItemPosition()),
@@ -330,12 +371,12 @@ to Security Advisory Alerts.
 
 ## Other samples and documentation
 
-[FirstLine Worker documentation](link)
+* The documentation for the Microsoft identity platform is available from [Microsoft identity platform (v2.0) overview](https://aka.ms/aadv2).
 
-* The documentation for the Microsoft identity platform is available from [https://aka.ms/aadv2](https://aka.ms/aadv2).
+* Other samples for the Microsoft identity platform are available from [Microsoft identity platform code samples](https://aka.ms/aaddevsamplesv2).
 
-* Other samples for the Microsoft identity platform are available from [https://aka.ms/aaddevsamplesv2](https://aka.ms/aaddevsamplesv2).
+* The conceptual documentation for MSAL Android is available from [Microsoft authentication library for android conceptual documentation](https://aka.ms/msalandroid).
 
-* The conceptual documentation for MSAL Android is available from [https://aka.ms/msalandroid](https://aka.ms/msalandroid).
+* [FirstLine Worker documentation](link)
 
 * [Learn more about Brokers](https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-v1-enable-sso-android#single-sign-on-concepts)
