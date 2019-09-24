@@ -45,10 +45,10 @@ The majority of the logic in this sample shows how to sign-in an end user and ma
 Microsoft provides applications for every mobile platform that allow for the bridging of credentials across applications from different vendors and for enhanced features that require a single secure place from where to validate credentials. These are called brokers. The brokers available for Android are **Microsoft Authenticator** and **Company Portal**.
 [Learn more about Brokers here.](https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-v1-enable-sso-android#single-sign-on-concepts)
 
-The MSAL for Android will automatically use the broker if they are present on the device. Brokers can only be invoked via MSAL.
+The MSAL for Android will automatically use the broker if they are present on the device.
 
 > [!NOTE]
-> If you have older versions of **Microsoft Authenticator** app or [Company portal app](https://docs.microsoft.com/en-us/intune-user-help/install-and-sign-in-to-the-intune-company-portal-app-ios) installed in the device where this sample application will be run, then the user will not be able to test the scenarios presented here. Please make sure that you have installed the latest version of Microsoft Authenticator or Company Portal on your device.
+> If you have older versions of **Microsoft Authenticator** app or [Company portal app](https://docs.microsoft.com/en-us/intune-user-help/install-and-sign-in-to-the-intune-company-portal-app-ios) installed in the device where this sample application will be run, then the user might not be able to test the scenarios presented here. Please make sure that you have installed the latest version of Microsoft Authenticator or Company Portal on your device.
 
 ### Single Account Mode
 
@@ -102,13 +102,15 @@ If your app also supports multiple accounts as well as shared device mode, you w
 
 ```java
 private IPublicClientApplication mApplication;
-if (mApplication instanceof IMultipleAccountPublicClientApplication) {
-IMultipleAccountPublicClientApplication multipleAccountApplication = (IMultipleAccountPublicClientApplication) mApplication;
-...
-} else if (mApplication instanceof ISingleAccountPublicClientApplication) {
-ISingleAccountPublicClientApplication singleAccountApplication = (ISingleAccountPublicClientApplication) mApplication;
-...
-}  
+
+        if (mApplication instanceOf IMultipleAccountPublicClientApplication) {
+          IMultipleAccountPublicClientApplication multipleAccountApplication = (IMultipleAccountPublicClientApplication) mApplication;
+           ...
+        } else if (mApplication instanceOf    ISingleAccountPublicClientApplication) {
+           ISingleAccountPublicClientApplication singleAccountApplication = (ISingleAccountPublicClientApplication) mApplication;
+            ...
+        }
+
 ```
 
 > [!NOTE]
@@ -206,7 +208,7 @@ The following files have the code that would be of interest to you.
         new IPublicClientApplication.ISingleAccountApplicationCreatedListener() {
             @Override
             public void onCreated(ISingleAccountPublicClientApplication application) {
-                mSingleAccountApp = application;
+                  mSingleAccountApp = application;
                 ...
 
     ```
@@ -283,8 +285,8 @@ The following files have the code that would be of interest to you.
         new IPublicClientApplication.IMultipleAccountApplicationCreatedListener() {
             @Override
             public void onCreated(IMultipleAccountPublicClientApplication application) {
-                mMultipleAccountApp = application;
-                loadAccount();
+                    mMultipleAccountApp = application;
+                    loadAccount();
             }
     ```
 
@@ -311,8 +313,8 @@ The following files have the code that would be of interest to you.
           mMultipleAccountApp.getAccounts(new IPublicClientApplication.LoadAccountsCallback() {
                       @Override
                       public void onTaskCompleted(final List<IAccount> result) {
-                          accountList = result;
-                          updateUI(accountList);
+                              accountList = result;
+                              updateUI(accountList);
                       }
     ```
 
