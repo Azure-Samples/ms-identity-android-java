@@ -38,10 +38,6 @@ During the auth flow, the users will be required to sign-in first, if its their 
 
 The majority of the logic in this sample shows how to sign-in an end user and make a call to the Microsoft Graph to get basic information about the signed-in user.
 
-### Enabling Firstline Workers scenario
-
-This app also demonstrates the [Single Account](link) and [Multiple Account](link) authentication modes available via the MSAL library. These are useful for the **Firstline Workers** scenarios, where the `Single Account` Mode can be used to set the device in a `Shared Mode` amongst multiple first line workers who'd share the device.
-
 ![Flowchart](ReadmeFiles/image1.png)
 
 ## Broker Authentication using MSAL
@@ -97,14 +93,26 @@ In the `Multiple Account` Mode, the application supports multiple accounts and c
 
 Code snippet from **MultipleAccountModeFragment** class shows how the application is set in the `Multiple Account` Mode in the code:
 
-```Java
+```java
 PublicClientApplication.createMultipleAccountPublicClientApplication(getContext(),
                 R.raw.auth_config_multiple_account);
 ```
 
+If your app also supports multiple accounts as well as shared device mode, you will have to perform type check and cast to the appropriate interface to perform an operation shown as below.
+
+```java
+private IPublicClientApplication mApplication;
+if (mApplication instanceof IMultipleAccountPublicClientApplication) {
+IMultipleAccountPublicClientApplication multipleAccountApplication = (IMultipleAccountPublicClientApplication) mApplication;
+...
+} else if (mApplication instanceof ISingleAccountPublicClientApplication) {
+ISingleAccountPublicClientApplication singleAccountApplication = (ISingleAccountPublicClientApplication) mApplication;
+...
+}  
+```
+
 > [!NOTE]
 > If you're writing an application that will only be used for Firstline Workers on shared devices, we recommend you write your application to  support only the `Single Account` Mode.
-> If your app also supports multiple accounts as well as shared device mode, you will have to perform type check (TODO//How ???) and cast to the appropriate interface to perform an operation.  
 
 For more information on the concepts used in this sample, be sure to read the [FirstLine Worker documentation](TODO://link)
 
@@ -114,9 +122,6 @@ To run this sample, you'll need:
 
 * Android SDK
 * An internet connection
-
-If you want to register your own application, you also need
-
 * An Azure Active Directory (Azure AD) tenant. For more information on how to get an Azure AD tenant, see [How to get an Azure AD tenant](https://azure.microsoft.com/en-us/documentation/articles/active-directory-howto-tenant/)
 * One or more user accounts in your Azure AD tenant.
 
@@ -144,16 +149,16 @@ From menu, select *Run* > *Run 'app'*. Once the app launches,
 
     * Multiple Account: Select this to explore Multiple Account Mode.
 
-1. Click on sign-in, it takes you to `add account` page.
+2. Click on sign-in, it takes you to `add account` page.
 
-1. Add one or more accounts as per the device mode, and sign in with      the account you want to.
+3. Add one or more accounts as per the device mode, and sign in with your test account.
 
-1. After successful sign-in basic user details are displayed.
+4. Once successfully signed-in, basic user details will be displayed.
 
-Follow the on screen options to explore more.
+To explore more about the application, follow on screen options.
 
 > [!NOTE]
-> This sample application is configured to run without registering your own application. To register your own application and run the sample with those settings, follow below steps.
+> This sample application is configured to run out-of-the-box. To register your own application and run the sample with those settings, follow below steps.
 
 ## Register your Own Application (Optional)  
 
@@ -163,20 +168,20 @@ To **create** an app registration,
 
 1. Click `New Registration`.
 
-1. Name your app, select the audience you're targeting, and click `Register`.
+2. Name your app, select the audience you're targeting, and click `Register`.
 
-1. In the `Overview` > `Sign in users in 5 minutes` > `Android`.
+3. In the `Overview` > `Sign in users in 5 minutes` > `Android`.
     * Click on `Make this changes for me`.
     * Enter the Package Name from your Android Manifest.
     * Generate a Signature Hash. Follow the instructions in the portal.
 
-1. Hit the `Make updates` button. Note the ***MSAL Configuration*** as it is used later in `AndroidManifest.xml` and `auth_config.json`.
+4. Hit the `Make updates` button. Note the ***MSAL Configuration*** as it is used later in `AndroidManifest.xml` and `auth_config.json`.
 
 **Configure** the sample application with your app registration by replacing the sample code in `auth_config.json` and `AndroidManifest.xml`
 
 1. Copy and paste the ***MSAL Configuration*** JSON from the Azure portal into `auth_config.json`.
 
-1. Inside the `AndroidManifest.xml`, replace `android:host` and `android:path` with the same info saved in above step.
+2. Inside the `AndroidManifest.xml`, replace `android:host` and `android:path` with the same info saved in above step.
         - `auth_config.json` contains this information as a reference inside the `redirect_uri` field.
         - The Signature Hash should NOT be URL encoded in the `AndroidManifest.xml`.
     Refer [Azure Active Directory Android Quickstart](https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-v2-android) for more details
@@ -377,6 +382,6 @@ to Security Advisory Alerts.
 
 * The conceptual documentation for MSAL Android is available from [Microsoft authentication library for android conceptual documentation](https://aka.ms/msalandroid).
 
-* [FirstLine Worker documentation](link)
+* [FirstLine Worker documentation](TODO://link)
 
 * [Learn more about Brokers](https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-v1-enable-sso-android#single-sign-on-concepts)
