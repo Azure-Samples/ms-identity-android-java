@@ -168,6 +168,8 @@ The following files have the code that would be of interest to you.
             @Override
             public void onCreated(ISingleAccountPublicClientApplication application) {
                 ...
+            }
+        });
     ```
 
 2. Signing in a user:
@@ -275,6 +277,8 @@ The following files have the code that would be of interest to you.
                         @Override
                         public void onRemoved() {
                             ...
+                        }
+                });
     ```
 
 ### B2CModeFragment class
@@ -305,6 +309,8 @@ The following files have the code that would be of interest to you.
                 public void onTaskCompleted(final List<IAccount> result) {
                     users = B2CUser.getB2CUsersFromAccountList(result);
                     ...
+                }
+        });
                     
         public static List<B2CUser> getB2CUsersFromAccountList(@NonNull final List<IAccount> accounts) {
             final HashMap<String, B2CUser> b2CUserHashMap = new HashMap<>();
@@ -325,6 +331,8 @@ The following files have the code that would be of interest to you.
 
                 user.accounts.add(account);
                 ...
+            }
+        }
      ```
 
 3. Acquire token silently (In `B2CUser`)
@@ -340,6 +348,8 @@ The following files have the code that would be of interest to you.
 
                 multipleAccountPublicClientApplication.acquireTokenSilentAsync(parameters);
                 ...
+            }
+        }
      ```
 
 4. Sign out (In `B2CUser`)
