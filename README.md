@@ -283,6 +283,8 @@ The following files have the code that would be of interest to you.
 
    Because B2C treats each policy as a separate authority, `B2CUser` was introduced to represent a single user that could hold one or more IAccount object for each policies.
 
+   If you'd like to use your own app registration, you will also need to update B2CConfiguration.java to match with your configuration json file.
+
 1. Acquire token / run user flow
     ```java
         AcquireTokenParameters parameters = new AcquireTokenParameters.Builder()
