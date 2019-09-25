@@ -56,8 +56,9 @@ In the `Single Account` Mode, only one user can sign into the application at a t
 The following code snippet from **SingleAccountModeFragment** class shows how the application is set to the `Single Account` Mode in the code:
 
 ```java
-PublicClientApplication.createSingleAccountPublicClientApplication(getContext(),
-                R.raw.auth_config_single_account);
+PublicClientApplication.createSingleAccountPublicClientApplication(
+    getContext(),
+    R.raw.auth_config_single_account);
 ```
 
 In the **auth_config_single_account.json** file, the `account_mode` is set as following:.
@@ -74,7 +75,7 @@ Code snippet from **MultipleAccountModeFragment** class shows how the applicatio
 
 ```java
 PublicClientApplication.createMultipleAccountPublicClientApplication(getContext(),
-                R.raw.auth_config_multiple_account);
+    R.raw.auth_config_multiple_account);
 ```
 
 ## How to run this sample
@@ -160,9 +161,8 @@ The following files have the code that would be of interest to you.
    The following steps give you more details.
 
 1. Create a SingleAccount PublicClientApplication:
-
     ```java
-        PublicClientApplication.createSingleAccountPublicClientApplication(getContext(),
+    PublicClientApplication.createSingleAccountPublicClientApplication(getContext(),
         R.raw.auth_config_single_account,
         new IPublicClientApplication.ISingleAccountApplicationCreatedListener() {
             @Override
@@ -173,58 +173,52 @@ The following files have the code that would be of interest to you.
     ```
 
 2. Signing in a user:
-
     ```java
-        mSingleAccountApp.signIn(getActivity(), getScopes(), getAuthInteractiveCallback());
+    mSingleAccountApp.signIn(getActivity(), getScopes(), getAuthInteractiveCallback());
     ```
 
 3. Acquiring token:
-
     * Interactive:
-
     ```java
-        mSingleAccountApp.acquireToken(getActivity(), getScopes(),getAuthInteractiveCallback());
+    mSingleAccountApp.acquireToken(getActivity(), getScopes(),getAuthInteractiveCallback());
     ```
 
     * Silent:
-
     ```java
-        mSingleAccountApp.acquireToken(getActivity(), getScopes(), getAuthInteractiveCallback());
+    mSingleAccountApp.acquireToken(getActivity(), getScopes(), getAuthInteractiveCallback());
     ```
 
 4. Calling Graph API to get basic user details and displaying data:
-
     ```java
-        private void callGraphAPI(final IAuthenticationResult authenticationResult) {
-                MSGraphRequestWrapper.callGraphAPIWithVolley(
-                        getContext(),
-                        graphResourceTextView.getText().toString(),
-                        authenticationResult.getAccessToken(),
-                        new Response.Listener<JSONObject>() {
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                /* Successfully called graph, process data and send to UI */
-                                Log.d(TAG, "Response: " + response.toString());
-                                displayGraphResult(response);
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                Log.d(TAG, "Error: " + error.toString());
-                                displayError(error);
-                            }
-                        });
-            }
+    private void callGraphAPI(final IAuthenticationResult authenticationResult) {
+        MSGraphRequestWrapper.callGraphAPIWithVolley(
+            getContext(),
+            graphResourceTextView.getText().toString(),
+            authenticationResult.getAccessToken(),
+            new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    /* Successfully called graph */
+                    ...
+                }
+            },
+            new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    ...
+                }
+            });    
+    }
     ```
 
 5. Sign-out:
-
     ```java
-        mSingleAccountApp.signOut(new ISingleAccountPublicClientApplication.SignOutCallback() {
-                @Override
-                public void onSignOut() {
-                    ...
+    mSingleAccountApp.signOut(new ISingleAccountPublicClientApplication.SignOutCallback() {
+            @Override
+            public void onSignOut() {
+                ...
+            }
+    });
     ```  
 
     When sign-out is performed it removes the signed-in account and cached tokens from this app.
@@ -242,43 +236,44 @@ The following files have the code that would be of interest to you.
             @Override
             public void onCreated(IMultipleAccountPublicClientApplication application) {
                     ...
+            }
+        });
     ```
 
 2. Acquiring token:
 
     * Interactive:
-
     ```java
     mMultipleAccountApp.acquireToken(getActivity(), getScopes(), getAuthInteractiveCallback());
     ```
 
     * Silent:
-
     ```java
-        mMultipleAccountApp.acquireTokenSilentAsync(getScopes(),
-                accountList.get(accountListSpinner.getSelectedItemPosition()),
-                        AUTHORITY,
-                        getAuthSilentCallback());
+    mMultipleAccountApp.acquireTokenSilentAsync(getScopes(),
+        accountList.get(accountListSpinner.getSelectedItemPosition()),
+            AUTHORITY,
+            getAuthSilentCallback());
     ```
 
 3. Get Accounts:
     ```java
-        mMultipleAccountApp.getAccounts(new IPublicClientApplication.LoadAccountsCallback() {
-                @Override
-                public void onTaskCompleted(final List<IAccount> result) {
-                    ...
+    mMultipleAccountApp.getAccounts(new IPublicClientApplication.LoadAccountsCallback() {
+        @Override
+        public void onTaskCompleted(final List<IAccount> result) {
+            ...
+        }
+    });
     ```
 
 4. Remove account:
-
     ```java
-        mMultipleAccountApp.removeAccount(accountList.get(accountListSpinner.getSelectedItemPosition()),
-                new IMultipleAccountPublicClientApplication.RemoveAccountCallback() {
-                        @Override
-                        public void onRemoved() {
-                            ...
-                        }
-                });
+    mMultipleAccountApp.removeAccount(accountList.get(accountListSpinner.getSelectedItemPosition()),
+        new IMultipleAccountPublicClientApplication.RemoveAccountCallback() {
+            @Override
+            public void onRemoved() {
+                ...
+            }
+        });
     ```
 
 ### B2CModeFragment class
@@ -291,73 +286,73 @@ The following files have the code that would be of interest to you.
 
 1. Acquire token / run user flow
     ```java
-        AcquireTokenParameters parameters = new AcquireTokenParameters.Builder()
-                .startAuthorizationFromActivity(getActivity())
-                .fromAuthority(B2CConfiguration.getAuthorityFromPolicyName(policyListSpinner.getSelectedItem().toString()))
-                .withScopes(B2CConfiguration.getScopes())
-                .withPrompt(Prompt.LOGIN)
-                .withCallback(getAuthInteractiveCallback())
-                .build();
+    AcquireTokenParameters parameters = new AcquireTokenParameters.Builder()
+            .startAuthorizationFromActivity(getActivity())
+            .fromAuthority(B2CConfiguration.getAuthorityFromPolicyName(policyListSpinner.getSelectedItem().toString()))
+            .withScopes(B2CConfiguration.getScopes())
+            .withPrompt(Prompt.LOGIN)
+            .withCallback(getAuthInteractiveCallback())
+            .build();
 
-        b2cApp.acquireToken(parameters);
-     ```
+    b2cApp.acquireToken(parameters);
+    ```
 
 2. Construct `B2CUser` objects from an account list (obtained from )
     ```java
-        b2cApp.getAccounts(new IPublicClientApplication.LoadAccountsCallback() {
-                @Override
-                public void onTaskCompleted(final List<IAccount> result) {
-                    users = B2CUser.getB2CUsersFromAccountList(result);
-                    ...
-                }
-        });
-                    
-        public static List<B2CUser> getB2CUsersFromAccountList(@NonNull final List<IAccount> accounts) {
-            final HashMap<String, B2CUser> b2CUserHashMap = new HashMap<>();
-            for (IAccount account : accounts) {
-                /**
-                * NOTE: Because B2C treats each policy as a separate authority, the access tokens, refresh tokens, and id tokens returned from each policy are considered logically separate entities.
-                *       In practical terms, this means that each policy returns a separate IAccount object whose tokens cannot be used to invoke other policies.
-                *
-                *       You can use the 'Subject' claim to identify that those accounts belong to the same user.
-                */
-                final String subject = B2CUser.getSubjectFromAccount(account);
-
-                B2CUser user = b2CUserHashMap.get(subject);
-                if (user == null) {
-                    user = new B2CUser();
-                    b2CUserHashMap.put(subject, user);
-                }
-
-                user.accounts.add(account);
-                ...
-            }
+    b2cApp.getAccounts(new IPublicClientApplication.LoadAccountsCallback() {
+        @Override
+        public void onTaskCompleted(final List<IAccount> result) {
+            users = B2CUser.getB2CUsersFromAccountList(result);
+            ...
         }
-     ```
+    });
+                    
+    public static List<B2CUser> getB2CUsersFromAccountList(@NonNull final List<IAccount> accounts) {
+        final HashMap<String, B2CUser> b2CUserHashMap = new HashMap<>();
+        for (IAccount account : accounts) {
+            /**
+            * NOTE: Because B2C treats each policy as a separate authority, the access tokens, refresh tokens, and id tokens returned from each policy are considered logically separate entities.
+            *       In practical terms, this means that each policy returns a separate IAccount object whose tokens cannot be used to invoke other policies.
+            *
+            *       You can use the 'Subject' claim to identify that those accounts belong to the same user.
+            */
+            final String subject = B2CUser.getSubjectFromAccount(account);
+
+            B2CUser user = b2CUserHashMap.get(subject);
+            if (user == null) {
+                user = new B2CUser();
+                b2CUserHashMap.put(subject, user);
+            }
+
+            user.accounts.add(account);
+            ...
+        }
+    }
+    ```
 
 3. Acquire token silently (In `B2CUser`)
     ```java
-        for (IAccount account : accounts) {
-            if (policyName.equalsIgnoreCase(getB2CPolicyNameFromAccount(account))) {
-                AcquireTokenSilentParameters parameters = new AcquireTokenSilentParameters.Builder()
-                        .fromAuthority(B2CConfiguration.getAuthorityFromPolicyName(policyName))
-                        .withScopes(scopes)
-                        .forAccount(account)
-                        .withCallback(callback)
-                        .build();
+    for (IAccount account : accounts) {
+        if (policyName.equalsIgnoreCase(getB2CPolicyNameFromAccount(account))) {
+            AcquireTokenSilentParameters parameters = new AcquireTokenSilentParameters.Builder()
+                .fromAuthority(B2CConfiguration.getAuthorityFromPolicyName(policyName))
+                .withScopes(scopes)
+                .forAccount(account)
+                .withCallback(callback)
+                .build();
 
-                multipleAccountPublicClientApplication.acquireTokenSilentAsync(parameters);
-                ...
-            }
+            multipleAccountPublicClientApplication.acquireTokenSilentAsync(parameters);
+            ...
         }
-     ```
+    }
+    ```
 
 4. Sign out (In `B2CUser`)
     ```java
-        for (IAccount account : accounts) {
-            multipleAccountPublicClientApplication.removeAccount(account);
-        }
-     ```
+    for (IAccount account : accounts) {
+        multipleAccountPublicClientApplication.removeAccount(account);
+    }
+    ```
 
 ## Feedback, Community Help, and Support
 
