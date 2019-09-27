@@ -58,7 +58,8 @@ The following code snippet from **SingleAccountModeFragment** class shows how th
 ```java
 PublicClientApplication.createSingleAccountPublicClientApplication(
     getContext(),
-    R.raw.auth_config_single_account);
+    R.raw.auth_config_single_account
+);
 ```
 
 In the **auth_config_single_account.json** file, the `account_mode` is set as following:.
@@ -75,7 +76,8 @@ Code snippet from **MultipleAccountModeFragment** class shows how the applicatio
 
 ```java
 PublicClientApplication.createMultipleAccountPublicClientApplication(getContext(),
-    R.raw.auth_config_multiple_account);
+    R.raw.auth_config_multiple_account
+);
 ```
 
 In the **auth_config_multiple_account.json** file, the `account_mode` is set as following:.
@@ -99,25 +101,23 @@ To run this sample, you'll need:
 > This sample ships with a default `redirect_uri` configured in the `AndroidManifest.xml`. In order for the default `redirect_uri` to work, this project must be built with the `debug.keystore` located in the `gradle/` directory. To configure signing in Android Studio, see [Sign Your App](https://developer.android.com/studio/publish/app-signing).
 
 ### Step 1: Clone the code
-
-  From your shell or command line:
+From your shell or command line:
 
 ```Shell
-   git clone https://github.com/Azure-Samples/ms-identity-android-java.git
+> git clone https://github.com/Azure-Samples/ms-identity-android-java.git
 ```
 
 The following steps are for Android Studio. But you can choose and work with any editor of your choice.
 
- Open Android Studio, and select *open an existing Android Studio project*. Find the cloned project and open it.
+Open Android Studio, and select *open an existing Android Studio project*. Find the cloned project and open it.
 
 ### Step 2: Run the sample
 
 From menu, select *Run* > *Run 'app'*. Once the app launches,
 
 1. Click on the hamburger icon
-
     * Single Account Mode: Select this to explore Single Account  
-* Multiple Account Mode: Select this to explore Multiple Account 
+    * Multiple Account Mode: Select this to explore Multiple Account 
     * B2C Mode: Select this to Explore B2C
 2. Depending on the mode selected, click on `sign-in` or `Get Graph Data Interactively` or `run user flow` , it takes you to  Sign in (`add account`) page.
 3. Sign in with AAD, MSA or B2C account.
@@ -153,19 +153,19 @@ To **create** an app registration,
     
     1. replace `android:host` with the package name
     
-        ```
-        android:host="<packaage_name>"
+        ```xml
+        android:host="<package_name>"
         ```
     
     2.  replace `android:path` with signature hash.
     
-        ```
+        ```xml
         android:path="<SignatureHash>"
         ```
     
-            - `auth_config.json` contains this information as a reference inside the `redirect_uri` field.
-                - The Signature Hash should NOT be URL encoded in the `AndroidManifest.xml`.
-        Refer [Azure Active Directory Android Quickstart](https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-v2-android) for more details
+        - `auth_config.json` contains this information as a reference inside the `redirect_uri` field.
+        - The Signature Hash should NOT be URL encoded in the `AndroidManifest.xml`.
+        Refer to [Azure Active Directory Android Quickstart](https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-v2-android) for more details
 
 From menu, select *Build* > *Clean Project* and *Run* > *Run 'app'*.
 
@@ -263,15 +263,19 @@ Contains code showing how the `Multiple Account` Mode is implemented. The includ
 
     * Interactive:
     ```java
-    mMultipleAccountApp.acquireToken(getActivity(), getScopes(),
-                                     getAuthInteractiveCallback());
-```
+    mMultipleAccountApp.acquireToken(getActivity(), getScopes(), getAuthInteractiveCallback());
+    ```
     
     * Silent:
     ```java
-    mMultipleAccountApp.acquireTokenSilentAsync(getScopes(),
-        accountList.get(accountListSpinner.getSelectedItemPosition()),AUTHORITY,
-            getAuthSilentCallback());
+    mMultipleAccountApp.acquireTokenSilentAsync(
+        getScopes(),
+        accountList.get(
+            accountListSpinner.getSelectedItemPosition()
+        ),
+        AUTHORITY,
+        getAuthSilentCallback()
+    );
     ```
 
 3. Get Accounts:
