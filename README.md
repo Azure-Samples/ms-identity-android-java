@@ -265,7 +265,7 @@ Contains code showing how the `Multiple Account` Mode is implemented. The includ
     ```java
     mMultipleAccountApp.acquireToken(getActivity(), getScopes(),
                                      getAuthInteractiveCallback());
-```
+    ```
     
     * Silent:
     ```java
