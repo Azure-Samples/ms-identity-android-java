@@ -152,7 +152,7 @@ To **create** an app registration,
         ```
     
             - `auth_config.json` contains this information as a reference inside the `redirect_uri` field.
-                - The Signature Hash should NOT be URL encoded in the `AndroidManifest.xml`.
+            - The Signature Hash should NOT be URL encoded in the `AndroidManifest.xml`.
         Refer [Azure Active Directory Android Quickstart](https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-v2-android) for more details
 
 From menu, select *Build* > *Clean Project* and *Run* > *Run 'app'*.
