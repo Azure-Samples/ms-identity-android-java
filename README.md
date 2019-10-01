@@ -25,7 +25,7 @@ During the auth flow, the users will be required to sign-in first, if it is thei
 
 The majority of the logic in this sample shows how to sign-in an end user and make a call to the Microsoft Graph to get basic information about the signed-in user.
 
-![Flowchart](ReadmeFiles/image1.png)
+![Flowchart](ReadmeFiles/Authflow.png)
 
 ## Broker Authentication using MSAL
 
