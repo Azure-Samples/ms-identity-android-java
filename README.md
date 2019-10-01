@@ -1,15 +1,3 @@
----
-languages:
-- java
-page_type: sample
-description: "Integrate Microsoft Identity Platform authentication in your Android application."
-products:
-- azure
-- azure-active-directory
-- office-ms-graph
-urlFragment: msal-android-app
----
-
 # Use MSAL in an Android app to sign-in users and call Microsoft Graph
 
 | [Getting Started](https://docs.microsoft.com/azure/active-directory/develop/guidedsetups/active-directory-android)| [Library](https://github.com/AzureAD/microsoft-authentication-library-for-android) | [API Reference](http://javadoc.io/doc/com.microsoft.identity.client/msal) | [Support](README.md#feedback-community-help-and-support)
