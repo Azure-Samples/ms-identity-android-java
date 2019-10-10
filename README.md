@@ -84,7 +84,7 @@ To run this sample, you'll need:
 ## Steps to Run the app
 
 > **Note:**
-> This sample ships with a default `redirect_uri` configured in the `AndroidManifest.xml`. In order for the default `redirect_uri` to work, this project must be built with the `debug.keystore` located in the `gradle/` directory. To configure signing in Android Studio, see [Sign Your App](https://developer.android.com/studio/publish/app-signing).
+> This sample ships with a default `redirect_uri` configured in the `AndroidManifest.xml`. In order for the default `redirect_uri` to work, this project must be built with the `debug.keystore` located in the `gradle/` directory. See [Sign your debug build](https://developer.android.com/studio/publish/app-signing#debug-mode) for more info.
 
 ### Step 1: Clone the code
 
