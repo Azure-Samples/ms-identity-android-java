@@ -83,8 +83,8 @@ To run this sample, you'll need:
 
 ## Steps to run the app
 
-**Note:**
-As a convenience, this sample ships with a default `redirect_uri` preconfigured in the `AndroidManifest.xml` so that you don't have to first register your own app object. A `redirect_uri` is partly based on your app's signing key. The sample project is configured to sign using the included `debug.keystore` so that the provided `redirect_uri` will work.
+> **Note:**
+> As a convenience, this sample ships with a default `redirect_uri` preconfigured in the `AndroidManifest.xml` so that you don't have to first register your own app object. A `redirect_uri` is partly based on your app's signing key. The sample project is configured to sign using the included `debug.keystore` so that the provided `redirect_uri` will work.
 
 ### Step 1: Clone the code
 
