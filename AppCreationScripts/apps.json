@@ -11,7 +11,7 @@
       "x-ms-version": "1.0",
       "replyUrlsWithType": [
         {
-          "url": "msal{AppId}://auth",
+          "url": "msauth://{package_name}/{signature_hash}",
           "type": "InstalledClient"
         }
       ],
