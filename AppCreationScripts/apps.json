@@ -11,7 +11,7 @@
       "x-ms-version": "1.0",
       "replyUrlsWithType": [
         {
-          "url": "msauth://{package_name}/{signature_hash}",
+          "url": "msauth://{Enter_the_Package_Name}/{Enter_the_Signature_Hash}",
           "type": "InstalledClient"
         }
       ],
