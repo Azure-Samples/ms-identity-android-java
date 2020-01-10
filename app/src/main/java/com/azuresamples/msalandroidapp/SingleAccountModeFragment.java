@@ -77,6 +77,7 @@ public class SingleAccountModeFragment extends Fragment {
     TextView graphResourceTextView;
     TextView logTextView;
     TextView currentUserTextView;
+    TextView deviceModeTextView;
 
     /* Azure AD Variables */
     private ISingleAccountPublicClientApplication mSingleAccountApp;
@@ -124,6 +125,7 @@ public class SingleAccountModeFragment extends Fragment {
         graphResourceTextView = view.findViewById(R.id.msgraph_url);
         logTextView = view.findViewById(R.id.txt_log);
         currentUserTextView = view.findViewById(R.id.current_user);
+        deviceModeTextView = view.findViewById(R.id.device_mode);
 
         signInButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -380,8 +382,10 @@ public class SingleAccountModeFragment extends Fragment {
             signOutButton.setEnabled(false);
             callGraphApiInteractiveButton.setEnabled(false);
             callGraphApiSilentButton.setEnabled(false);
-            currentUserTextView.setText("");
+            currentUserTextView.setText("None");
         }
+
+        deviceModeTextView.setText(mSingleAccountApp.isSharedDevice() ? "Shared" : "Non-shared");
     }
 
     /**

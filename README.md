@@ -68,7 +68,7 @@ In the code, you can use the `isSharedDevice()` flag to determine if an applicat
 Code snippet from **SingleAccountModeFragment** class showing usage of the `isSharedDevice()` flag:
 
 ```Java
-deviceModeTextView.setText(mSingleAccountApp.isSharedDevice() ?"Shared" :"Non-Shared");
+deviceModeTextView.setText(mSingleAccountApp.isSharedDevice() ? "Shared" :"Non-Shared");
 ```
 
 > [!NOTE]
