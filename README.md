@@ -111,7 +111,7 @@ private IPublicClientApplication mApplication;
 > [!NOTE]
 > If you're writing an application that will only be used for Firstline Workers on shared devices, we recommend you write your application to  support only the `Single Account` Mode.
 
-For more information on the concepts used in this sample, be sure to read the [FirstLine Worker documentation](TODO://link)
+For more information on the concepts used in this sample, be sure to read the [FirstLine Worker documentation](https://docs.microsoft.com/azure/active-directory/develop/shared-device-mode.md)
 
 ## How to run this sample
 
@@ -438,6 +438,6 @@ program. Please do not post security issues to GitHub Issues or any other public
 
 * The conceptual documentation for MSAL Android is available from [Microsoft authentication library for android conceptual documentation](https://aka.ms/msalandroid).
 
-* [FirstLine Worker documentation](TODO://link)
+* [FirstLine Worker documentation](https://docs.microsoft.com/azure/active-directory/develop/shared-device-mode.md)
 
 * [Learn more about Brokers](https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-v1-enable-sso-android#single-sign-on-concepts)
