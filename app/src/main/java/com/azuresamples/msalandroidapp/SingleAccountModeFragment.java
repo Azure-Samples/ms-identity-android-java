@@ -200,7 +200,7 @@ public class SingleAccountModeFragment extends Fragment {
         super.onResume();
 
         /**
-         * The account may have been removed from the device (if broker is in use).
+         * In shared device mode, the account might be signed in/out by other apps while this app is not in focus.
          * Therefore, we want to update the account state by invoking loadAccount() here.
          */
         loadAccount();

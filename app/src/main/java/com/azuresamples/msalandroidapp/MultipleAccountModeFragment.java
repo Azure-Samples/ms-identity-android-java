@@ -128,7 +128,7 @@ public class MultipleAccountModeFragment extends Fragment {
                 }
 
                 /**
-                 * Removes the selected account and cached tokens from this app.
+                 * Removes the selected account and cached tokens from this app (or device, if the device is in shared mode).
                  */
                 mMultipleAccountApp.removeAccount(accountList.get(accountListSpinner.getSelectedItemPosition()),
                         new IMultipleAccountPublicClientApplication.RemoveAccountCallback() {

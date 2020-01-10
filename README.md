@@ -14,6 +14,7 @@ This sample walks you through the process of integrating authentication with Mic
 * Sign-in a user
 * Device-wide SSO and Conditional Access support through the Auth Broker
 * Select between Single Account Mode and Multiple Account Mode
+* How to handle shared device mode
 * Get a token for the [Microsoft Graph](https://graph.microsoft.com)
 * Call the [Microsoft Graph](https://graph.microsoft.com)
 * Sign out the user
@@ -55,6 +56,26 @@ In the **auth_config_single_account.json** file, the `account_mode` is set as fo
 "account_mode" : "SINGLE",
 ```
 
+#### Single Account Mode with Shared Device Mode
+
+`Shared Device` Mode will allow you to configure Android devices to be shared by multiple employees, while providing Microsoft Identity backed management of the device. Employees will be able to sign-in to their devices and access customer information quickly. When they are finished with their shift or task, they will be able to globally Sign-Out of the device and it will be immediately ready for the next employee to use.
+
+> [!NOTE]
+> Applications that run on Shared Devices must be in Single Account Mode. Applications that only support Multiple Account Mode will not run on a Shared Device.
+
+In the code, you can use the `isSharedDevice()` flag to determine if an application is in the Shared Device Mode. Your app can use this flag to modify UX accordingly.
+
+Code snippet from **SingleAccountModeFragment** class showing usage of the `isSharedDevice()` flag:
+
+```Java
+deviceModeTextView.setText(mSingleAccountApp.isSharedDevice() ?"Shared" :"Non-Shared");
+```
+
+> [!NOTE]
+> You can only put a device in to Shared Mode using the [Authenticator app](https://www.microsoft.com/en-us/account/authenticator) and with a user who is in the [Cloud Device Administrator](https://docs.microsoft.com/en-us/azure/active-directory/users-groups-roles/directory-assign-admin-roles#cloud-device-administrator) role. You can configure the membership of your Organizational Roles by going to the Azure Portal and selecting:
+>
+> Azure Active Directory -> Roles and Administrators -> Cloud Device Administrator  
+
 ## Multiple Account Mode
 
 In the `Multiple Account` Mode, the application supports multiple accounts and can switch between accounts of the user and get data from that user's account.
@@ -71,6 +92,26 @@ In the **auth_config_multiple_account.json** file, the `account_mode` is set as 
 ```json
 "account_mode" : "MULTIPLE",
 ```
+
+If your app also supports multiple accounts as well as shared device mode, you will have to perform type check and cast to the appropriate interface to perform an operation shown as below.
+
+```java
+private IPublicClientApplication mApplication;
+
+        if (mApplication instanceOf IMultipleAccountPublicClientApplication) {
+          IMultipleAccountPublicClientApplication multipleAccountApplication = (IMultipleAccountPublicClientApplication) mApplication;
+           ...
+        } else if (mApplication instanceOf    ISingleAccountPublicClientApplication) {
+           ISingleAccountPublicClientApplication singleAccountApplication = (ISingleAccountPublicClientApplication) mApplication;
+            ...
+        }
+
+```
+
+> [!NOTE]
+> If you're writing an application that will only be used for Firstline Workers on shared devices, we recommend you write your application to  support only the `Single Account` Mode.
+
+For more information on the concepts used in this sample, be sure to read the [FirstLine Worker documentation](TODO://link)
 
 ## How to run this sample
 
@@ -228,7 +269,8 @@ Contains code showing how the `Single Account` Mode is implemented. The includes
     });
     ```
 
-    When sign-out is performed, it removes the signed-in account and cached tokens from this app.
+    When sign-out is performed it removes the signed-in account and cached tokens from this app (or device, if the device
+    is in shared mode)
 
 ### MultipleAccountModeFragment class
 
@@ -395,5 +437,7 @@ program. Please do not post security issues to GitHub Issues or any other public
 * Other samples for the Microsoft identity platform are available from [Microsoft identity platform code samples](https://aka.ms/aaddevsamplesv2).
 
 * The conceptual documentation for MSAL Android is available from [Microsoft authentication library for android conceptual documentation](https://aka.ms/msalandroid).
+
+* [FirstLine Worker documentation](TODO://link)
 
 * [Learn more about Brokers](https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-v1-enable-sso-android#single-sign-on-concepts)
