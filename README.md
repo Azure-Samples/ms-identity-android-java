@@ -60,6 +60,8 @@ In the **auth_config_single_account.json** file, the `account_mode` is set as fo
 
 `Shared Device` Mode will allow you to configure Android devices to be shared by multiple employees, while providing Microsoft Identity backed management of the device. Employees will be able to sign-in to their devices and access customer information quickly. When they are finished with their shift or task, they will be able to globally Sign-Out of the device and it will be immediately ready for the next employee to use.
 
+![Flowchart](ReadmeFiles/shareddeviceflowchart.png)
+
 > [!NOTE]
 > Applications that run on Shared Devices must be in Single Account Mode. Applications that only support Multiple Account Mode will not run on a Shared Device.
 
@@ -68,7 +70,7 @@ In the code, you can use the `isSharedDevice()` flag to determine if an applicat
 Code snippet from **SingleAccountModeFragment** class showing usage of the `isSharedDevice()` flag:
 
 ```Java
-deviceModeTextView.setText(mSingleAccountApp.isSharedDevice() ? "Shared" :"Non-Shared");
+deviceModeTextView.setText(mSingleAccountApp.isSharedDevice() ? "Shared" : "Non-Shared");
 ```
 
 > [!NOTE]
