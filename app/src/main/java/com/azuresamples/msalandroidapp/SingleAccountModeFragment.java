@@ -65,9 +65,6 @@ import org.json.JSONObject;
 public class SingleAccountModeFragment extends Fragment {
     private static final String TAG = SingleAccountModeFragment.class.getSimpleName();
 
-    /* Azure AD v2 Configs */
-    final static String AUTHORITY = "https://login.microsoftonline.com/common";
-
     /* UI & Debugging Variables */
     Button signInButton;
     Button signOutButton;
@@ -81,6 +78,7 @@ public class SingleAccountModeFragment extends Fragment {
 
     /* Azure AD Variables */
     private ISingleAccountPublicClientApplication mSingleAccountApp;
+    private IAccount mAccount;
 
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -149,8 +147,9 @@ public class SingleAccountModeFragment extends Fragment {
                 mSingleAccountApp.signOut(new ISingleAccountPublicClientApplication.SignOutCallback() {
                     @Override
                     public void onSignOut() {
-                        updateUI(null);
-                        performOperationOnSignOut();
+                        mAccount = null;
+                        updateUI();
+                        showToastOnSignOut();
                     }
 
                     @Override
@@ -191,7 +190,7 @@ public class SingleAccountModeFragment extends Fragment {
                  * Once you've signed the user in,
                  * you can perform acquireTokenSilent to obtain resources without interrupting the user.
                  */
-                mSingleAccountApp.acquireTokenSilentAsync(getScopes(), AUTHORITY, getAuthSilentCallback());
+                mSingleAccountApp.acquireTokenSilentAsync(getScopes(), mAccount.getAuthority(), getAuthSilentCallback());
             }
         });
 
@@ -230,14 +229,15 @@ public class SingleAccountModeFragment extends Fragment {
             @Override
             public void onAccountLoaded(@Nullable IAccount activeAccount) {
                 // You can use the account data to update your UI or your app database.
-                updateUI(activeAccount);
+                mAccount = activeAccount;
+                updateUI();
             }
 
             @Override
             public void onAccountChanged(@Nullable IAccount priorAccount, @Nullable IAccount currentAccount) {
                 if (currentAccount == null) {
                     // Perform a cleanup task as the signed-in account changed.
-                    performOperationOnSignOut();
+                    showToastOnSignOut();
                 }
             }
 
@@ -294,7 +294,8 @@ public class SingleAccountModeFragment extends Fragment {
                 Log.d(TAG, "ID Token: " + authenticationResult.getAccount().getClaims().get("id_token"));
 
                 /* Update account */
-                updateUI(authenticationResult.getAccount());
+                mAccount = authenticationResult.getAccount();
+                updateUI();
 
                 /* call graph */
                 callGraphAPI(authenticationResult);
@@ -372,13 +373,13 @@ public class SingleAccountModeFragment extends Fragment {
     /**
      * Updates UI based on the current account.
      */
-    private void updateUI(@Nullable final IAccount account) {
-        if (account != null) {
+    private void updateUI() {
+        if (mAccount != null) {
             signInButton.setEnabled(false);
             signOutButton.setEnabled(true);
             callGraphApiInteractiveButton.setEnabled(true);
             callGraphApiSilentButton.setEnabled(true);
-            currentUserTextView.setText(account.getUsername());
+            currentUserTextView.setText(mAccount.getUsername());
         } else {
             signInButton.setEnabled(true);
             signOutButton.setEnabled(false);
@@ -393,7 +394,7 @@ public class SingleAccountModeFragment extends Fragment {
     /**
      * Updates UI when app sign out succeeds
      */
-    private void performOperationOnSignOut() {
+    private void showToastOnSignOut() {
         final String signOutText = "Signed Out.";
         currentUserTextView.setText("");
         Toast.makeText(getContext(), signOutText, Toast.LENGTH_SHORT)

@@ -63,9 +63,6 @@ import java.util.List;
 public class MultipleAccountModeFragment extends Fragment {
     private static final String TAG = SingleAccountModeFragment.class.getSimpleName();
 
-    /* Azure AD v2 Configs */
-    final static String AUTHORITY = "https://login.microsoftonline.com/common";
-
     /* UI & Debugging Variables */
     Button removeAccountButton;
     Button callGraphApiInteractiveButton;
@@ -77,7 +74,6 @@ public class MultipleAccountModeFragment extends Fragment {
 
     /* Azure AD Variables */
     private IMultipleAccountPublicClientApplication mMultipleAccountApp;
-
     private List<IAccount> accountList;
 
     @Override
@@ -177,6 +173,8 @@ public class MultipleAccountModeFragment extends Fragment {
                     return;
                 }
 
+                final IAccount selectedAccount = accountList.get(accountListSpinner.getSelectedItemPosition());
+
                 /**
                  * Performs acquireToken without interrupting the user.
                  *
@@ -184,8 +182,8 @@ public class MultipleAccountModeFragment extends Fragment {
                  * (can be obtained via getAccount()).
                  */
                 mMultipleAccountApp.acquireTokenSilentAsync(getScopes(),
-                        accountList.get(accountListSpinner.getSelectedItemPosition()),
-                        AUTHORITY,
+                        selectedAccount,
+                        selectedAccount.getAuthority(),
                         getAuthSilentCallback());
             }
         });
