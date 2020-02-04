@@ -296,6 +296,10 @@ public class MultipleAccountModeFragment extends Fragment {
 
     /**
      * Make an HTTP request to obtain MSGraph data
+     *
+     * The sample is using the global service cloud as a default.
+     * If you're developing an app for sovereign cloud users, please change the Microsoft Graph Resource URL accordingly.
+     * https://docs.microsoft.com/en-us/graph/deployments#microsoft-graph-and-graph-explorer-service-root-endpoints
      */
     private void callGraphAPI(final IAuthenticationResult authenticationResult) {
         MSGraphRequestWrapper.callGraphAPIUsingVolley(
