@@ -35,7 +35,7 @@
                 "appId": "0984a7b6-bc13-4141-8b0d-8f767e136bb7",
                 "tenantId": "common",
                 "redirectUri": "msauth://com.azuresamples.msalandroidapp/1wIqXSqBj7w%2Bh11ZifsnqwgyKrY%3D",
-                "signInAudience": "AzureADandPersonalMicrosoftAccount"
+                "authorityUrl": "https://login.microsoftonline.com/common"
              }
           },
           {
@@ -44,7 +44,7 @@
                 "appId": "0984a7b6-bc13-4141-8b0d-8f767e136bb7",
                 "tenantId": "common",
                 "redirectUri": "msauth://com.azuresamples.msalandroidapp/1wIqXSqBj7w%2Bh11ZifsnqwgyKrY%3D",
-                "signInAudience": "AzureADandPersonalMicrosoftAccount"
+                "authorityUrl": "https://login.microsoftonline.com/common"
              }
            },
            {
@@ -53,6 +53,12 @@
                 "packageName": "com.azuresamples.msalandroidapp",
                 "keyHash": "/1wIqXSqBj7w+h11ZifsnqwgyKrY="
               }
+           },
+           {
+            "settingFile": "/app/src/main/res/raw/quickstart_sample_config.json",
+            "replaceTokens": {
+                "graphEndpoint": "https://graph.microsoft.com"
+             }
            }
        ]	
      }
