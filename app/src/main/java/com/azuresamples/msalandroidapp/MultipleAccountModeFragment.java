@@ -117,6 +117,13 @@ public class MultipleAccountModeFragment extends Fragment {
         logTextView = view.findViewById(R.id.txt_log);
         accountListSpinner = view.findViewById(R.id.account_list);
 
+        /**
+         * The sample is using the global service cloud as a default.
+         * If you're developing an app for sovereign cloud users, please change the Microsoft Graph Resource URL accordingly.
+         * https://docs.microsoft.com/en-us/graph/deployments#microsoft-graph-and-graph-explorer-service-root-endpoints
+         */
+        graphResourceTextView.setText(MSGraphRequestWrapper.MSGRAPH_RESOURCE_GLOBAL + "/v1.0/me");
+
         removeAccountButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (mMultipleAccountApp == null) {

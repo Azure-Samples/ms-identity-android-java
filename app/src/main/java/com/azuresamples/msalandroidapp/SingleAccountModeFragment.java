@@ -125,6 +125,13 @@ public class SingleAccountModeFragment extends Fragment {
         currentUserTextView = view.findViewById(R.id.current_user);
         deviceModeTextView = view.findViewById(R.id.device_mode);
 
+        /**
+         * The sample is using the global service cloud as a default.
+         * If you're developing an app for sovereign cloud users, please change the Microsoft Graph Resource URL accordingly.
+         * https://docs.microsoft.com/en-us/graph/deployments#microsoft-graph-and-graph-explorer-service-root-endpoints
+         */
+        graphResourceTextView.setText(MSGraphRequestWrapper.MSGRAPH_RESOURCE_GLOBAL + "/v1.0/me");
+
         signInButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (mSingleAccountApp == null) {
@@ -202,7 +209,7 @@ public class SingleAccountModeFragment extends Fragment {
 
         /**
          * The account may have been removed from the device (if broker is in use).
-         * 
+         *
          * In shared device mode, the account might be signed in/out by other apps while this app is not in focus.
          * Therefore, we want to update the account state by invoking loadAccount() here.
          */

@@ -44,9 +44,18 @@ public class MSGraphRequestWrapper {
     private static final String TAG = MSGraphRequestWrapper.class.getSimpleName();
 
     /**
+     * See: https://docs.microsoft.com/en-us/graph/deployments#microsoft-graph-and-graph-explorer-service-root-endpoints
+     */
+    public static final String MSGRAPH_RESOURCE_GLOBAL = "https://graph.microsoft.com";
+    public static final String MSGRAPH_RESOURCE_GERMANY = "https://graph.microsoft.de";
+    public static final String MSGRAPH_RESOURCE_CHINA = "https://microsoftgraph.chinacloudapi.cn";
+    public static final String MSGRAPH_RESOURCE_US_GOV_L4 = "https://graph.microsoft.us";
+    public static final String MSGRAPH_RESOURCE_US_GOV_L5_DOD = "https://dod-graph.microsoft.us";
+
+    /**
      * Use Volley to make an HTTP request with
-     *   1) a given MSGraph resource URL
-     *   2) an access token
+     * 1) a given MSGraph resource URL
+     * 2) an access token
      * to obtain MSGraph data.
      **/
     public static void callGraphAPIUsingVolley(@NonNull final Context context,
