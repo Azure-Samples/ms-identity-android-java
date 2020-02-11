@@ -56,7 +56,6 @@
             "settingFile": "/app/src/main/java/com/azuresamples/msalandroidapp/MSGraphRequestWrapper.java",
             "replaceTokens": {
                 "graphEndpoint": "https://graph.microsoft.com"
-                
              }
            }
        ]	
