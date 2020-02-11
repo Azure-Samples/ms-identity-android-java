@@ -125,7 +125,7 @@ public class SingleAccountModeFragment extends Fragment {
         currentUserTextView = view.findViewById(R.id.current_user);
         deviceModeTextView = view.findViewById(R.id.device_mode);
 
-        final String defaultGraphResourceUrl = MSGraphRequestWrapper.getMSGraphRootEndpoint(getContext()) + "/v1.0/me";
+        final String defaultGraphResourceUrl = MSGraphRequestWrapper.MS_GRAPH_ROOT_ENDPOINT + "/v1.0/me";
         graphResourceTextView.setText(defaultGraphResourceUrl);
 
         signInButton.setOnClickListener(new View.OnClickListener() {

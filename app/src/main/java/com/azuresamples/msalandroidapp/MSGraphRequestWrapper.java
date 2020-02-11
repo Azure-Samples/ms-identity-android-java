@@ -34,18 +34,16 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import org.json.JSONObject;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
 public class MSGraphRequestWrapper {
     private static final String TAG = MSGraphRequestWrapper.class.getSimpleName();
+
+    public static final String MS_GRAPH_ROOT_ENDPOINT = "https://graph.microsoft.com";
 
     /**
      * Use Volley to make an HTTP request with
@@ -91,15 +89,5 @@ public class MSGraphRequestWrapper {
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(request);
-    }
-
-    /**
-     * Reads an MSGraph root endpoint from quickstart_sample_config.json.
-     * */
-    public static String getMSGraphRootEndpoint(Context context){
-        final InputStream is = context.getResources().openRawResource(R.raw.quickstart_sample_config);
-        final JsonParser jsonParser = new JsonParser();
-        final JsonObject jsonObject = jsonParser.parse(new InputStreamReader(is)).getAsJsonObject();
-        return jsonObject.get("graphEndpoint").getAsString();
     }
 }
