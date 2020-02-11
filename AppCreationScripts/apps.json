@@ -33,7 +33,6 @@
             "settingFile": "/app/src/main/res/raw/auth_config_multiple_account.json",
             "replaceTokens": {
                 "appId": "0984a7b6-bc13-4141-8b0d-8f767e136bb7",
-                "tenantId": "common",
                 "redirectUri": "msauth://com.azuresamples.msalandroidapp/1wIqXSqBj7w%2Bh11ZifsnqwgyKrY%3D",
                 "authorityUrl": "https://login.microsoftonline.com/common"
              }
@@ -42,7 +41,6 @@
             "settingFile": "/app/src/main/res/raw/auth_config_single_account.json",
             "replaceTokens": {
                 "appId": "0984a7b6-bc13-4141-8b0d-8f767e136bb7",
-                "tenantId": "common",
                 "redirectUri": "msauth://com.azuresamples.msalandroidapp/1wIqXSqBj7w%2Bh11ZifsnqwgyKrY%3D",
                 "authorityUrl": "https://login.microsoftonline.com/common"
              }
