@@ -55,9 +55,10 @@
               }
            },
            {
-            "settingFile": "/app/src/main/res/raw/quickstart_sample_config.json",
+            "settingFile": "/app/src/main/java/com/azuresamples/msalandroidapp/MSGraphRequestWrapper.java",
             "replaceTokens": {
                 "graphEndpoint": "https://graph.microsoft.com"
+                
              }
            }
        ]	
