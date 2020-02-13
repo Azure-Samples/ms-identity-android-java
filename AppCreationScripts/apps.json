@@ -34,7 +34,7 @@
             "replaceTokens": {
                 "appId": "0984a7b6-bc13-4141-8b0d-8f767e136bb7",
                 "redirectUri": "msauth://com.azuresamples.msalandroidapp/1wIqXSqBj7w%2Bh11ZifsnqwgyKrY%3D",
-                "authorityEndpointHost": "https://login.microsoftonline.com/",
+                "authorityEndpointHost": "https://login.microsoftonline.com/"
              }
           },
           {
