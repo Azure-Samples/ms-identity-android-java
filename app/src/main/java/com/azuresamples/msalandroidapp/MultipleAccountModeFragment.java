@@ -117,7 +117,7 @@ public class MultipleAccountModeFragment extends Fragment {
         logTextView = view.findViewById(R.id.txt_log);
         accountListSpinner = view.findViewById(R.id.account_list);
 
-        final String defaultGraphResourceUrl = MSGraphRequestWrapper.MS_GRAPH_ROOT_ENDPOINT + "/v1.0/me";
+        final String defaultGraphResourceUrl = MSGraphRequestWrapper.MS_GRAPH_ROOT_ENDPOINT + "v1.0/me";
         graphResourceTextView.setText(defaultGraphResourceUrl);
 
         removeAccountButton.setOnClickListener(new View.OnClickListener() {
