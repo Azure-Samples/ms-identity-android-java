@@ -34,7 +34,7 @@
             "replaceTokens": {
                 "appId": "0984a7b6-bc13-4141-8b0d-8f767e136bb7",
                 "redirectUri": "msauth://com.azuresamples.msalandroidapp/1wIqXSqBj7w%2Bh11ZifsnqwgyKrY%3D",
-                "authorityUrl": "https://login.microsoftonline.com/common"
+                "authorityEndpointHost": "https://login.microsoftonline.com/",
              }
           },
           {
@@ -42,7 +42,7 @@
             "replaceTokens": {
                 "appId": "0984a7b6-bc13-4141-8b0d-8f767e136bb7",
                 "redirectUri": "msauth://com.azuresamples.msalandroidapp/1wIqXSqBj7w%2Bh11ZifsnqwgyKrY%3D",
-                "authorityUrl": "https://login.microsoftonline.com/common"
+                "authorityEndpointHost": "https://login.microsoftonline.com/"
              }
            },
            {
@@ -55,7 +55,7 @@
            {
             "settingFile": "/app/src/main/java/com/azuresamples/msalandroidapp/MSGraphRequestWrapper.java",
             "replaceTokens": {
-                "graphEndpoint": "https://graph.microsoft.com"
+                "msgraphEndpointHost": "https://graph.microsoft.com/"
              }
            }
        ]	
