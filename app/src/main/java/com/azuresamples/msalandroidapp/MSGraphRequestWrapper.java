@@ -43,10 +43,13 @@ import java.util.Map;
 public class MSGraphRequestWrapper {
     private static final String TAG = MSGraphRequestWrapper.class.getSimpleName();
 
+    // See: https://docs.microsoft.com/en-us/graph/deployments#microsoft-graph-and-graph-explorer-service-root-endpoints
+    public static final String MS_GRAPH_ROOT_ENDPOINT = "https://graph.microsoft.com/";
+
     /**
      * Use Volley to make an HTTP request with
-     *   1) a given MSGraph resource URL
-     *   2) an access token
+     * 1) a given MSGraph resource URL
+     * 2) an access token
      * to obtain MSGraph data.
      **/
     public static void callGraphAPIUsingVolley(@NonNull final Context context,

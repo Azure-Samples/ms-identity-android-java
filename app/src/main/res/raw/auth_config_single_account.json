@@ -7,10 +7,7 @@
   "authorities" : [
     {
       "type": "AAD",
-      "audience": {
-        "type": "AzureADandPersonalMicrosoftAccount",
-        "tenant_id": "common"
-      }
+      "authority_url": "https://login.microsoftonline.com/common"
     }
   ]
 }
