@@ -50,7 +50,7 @@
            {
              "settingFile": "/app/src/main/AndroidManifest.xml",
              "replaceTokens": {
-                "packageName": "com.azuresamples.msalandroidapp",
+                "packageName": "android:host=\"com.azuresamples.msalandroidapp\"",
                 "keyHash": "1wIqXSqBj7w+h11ZifsnqwgyKrY="
               }
            },
