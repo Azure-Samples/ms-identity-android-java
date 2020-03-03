@@ -50,9 +50,15 @@
            {
              "settingFile": "/app/src/main/AndroidManifest.xml",
              "replaceTokens": {
-                "packageName": "android:host=\"com.azuresamples.msalandroidapp\"",
+                "packageNameManifest": "android:host=\"com.azuresamples.msalandroidapp\"",
                 "keyHash": "1wIqXSqBj7w+h11ZifsnqwgyKrY="
               }
+           },
+           {
+            "settingFile": "/app/build.gradle",
+            "replaceTokens": {
+               "packageNameGradle": "com.azuresamples.msalandroidapp"
+             }
            },
            {
             "settingFile": "/app/src/main/java/com/azuresamples/msalandroidapp/MSGraphRequestWrapper.java",
