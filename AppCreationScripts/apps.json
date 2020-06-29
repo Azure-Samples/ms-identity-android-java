@@ -9,19 +9,13 @@
       "x-ms-id": "active-directory-android-java",
       "x-ms-name": "android-java",
       "x-ms-version": "1.0",
-      "replyUrlsWithType": [
-        {
-          "url": "msauth://{Enter_the_Package_Name}/{Enter_the_Signature_Hash}",
-          "type": "InstalledClient"
-        }
-      ],
       "requiredResourceAccess": [
         {
           "x-ms-resourceAppName": "Microsoft Graph",
           "resourceAppId": "00000003-0000-0000-c000-000000000000",
           "resourceAccess": [
             {
-              "id": "Enter_the_Application_Id_here",
+              "id": "e1fe6dd8-ba31-4d61-89e7-88639da4683d",
               "type": "Scope",
               "x-ms-name": "user.read"
             }
