@@ -9,6 +9,7 @@
       "x-ms-id": "active-directory-android-java",
       "x-ms-name": "android-java",
       "x-ms-version": "1.0",
+      "replyUrlsWithType": [],
       "requiredResourceAccess": [
         {
           "x-ms-resourceAppName": "Microsoft Graph",
