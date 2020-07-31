@@ -170,6 +170,15 @@ public class SingleAccountModeFragment extends Fragment {
                     return;
                 }
 
+                /**
+                 * If acquireTokenSilent() returns an error that requires an interaction (MsalUiRequiredException),
+                 * invoke acquireToken() to have the user resolve the interrupt interactively.
+                 *
+                 * Some example scenarios are
+                 *  - password change
+                 *  - the resource you're acquiring a token for has a stricter set of requirement than your Single Sign-On refresh token.
+                 *  - you're introducing a new scope which the user has never consented for.
+                 */
                 mSingleAccountApp.signInAgain(getActivity(), getScopes(), Prompt.LOGIN, getAuthInteractiveCallback());
             }
         });
