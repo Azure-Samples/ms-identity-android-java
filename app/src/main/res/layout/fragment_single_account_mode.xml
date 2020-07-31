@@ -31,30 +31,30 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="3"
                     android:layout_gravity="center_vertical"
-                    android:textStyle="bold"
-                    android:text="Scope" />
+                    android:layout_weight="3"
+                    android:text="Scope"
+                    android:textStyle="bold" />
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_weight="7">
+                    android:layout_weight="7"
+                    android:orientation="vertical">
 
                     <EditText
                         android:id="@+id/scope"
-                        android:layout_height="wrap_content"
                         android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:text="user.read"
                         android:textSize="12sp" />
 
                     <TextView
-                        android:layout_height="wrap_content"
                         android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:paddingLeft="5dp"
                         android:text="Type in scopes delimited by space"
-                        android:textSize="10sp"  />
+                        android:textSize="10sp" />
 
                 </LinearLayout>
             </LinearLayout>
@@ -70,21 +70,21 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="3"
                     android:layout_gravity="center_vertical"
-                    android:textStyle="bold"
-                    android:text="MSGraph Resource URL" />
+                    android:layout_weight="3"
+                    android:text="MSGraph Resource URL"
+                    android:textStyle="bold" />
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_weight="7">
+                    android:layout_weight="7"
+                    android:orientation="vertical">
 
                     <EditText
                         android:id="@+id/msgraph_url"
-                        android:layout_height="wrap_content"
                         android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:textSize="12sp" />
                 </LinearLayout>
             </LinearLayout>
@@ -101,15 +101,15 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
-                    android:textStyle="bold"
-                    android:text="Signed-in user" />
+                    android:text="Signed-in user"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/current_user"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="5dp"
                     android:layout_weight="7"
+                    android:paddingLeft="5dp"
                     android:text="None" />
             </LinearLayout>
 
@@ -125,15 +125,15 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
-                    android:textStyle="bold"
-                    android:text="Device mode" />
+                    android:text="Device mode"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/device_mode"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="5dp"
                     android:layout_weight="7"
+                    android:paddingLeft="5dp"
                     android:text="None" />
             </LinearLayout>
 
@@ -151,16 +151,16 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="5"
                     android:gravity="center"
-                    android:text="Sign In"/>
+                    android:text="Sign In" />
 
                 <Button
                     android:id="@+id/btn_removeAccount"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="5"
+                    android:enabled="false"
                     android:gravity="center"
-                    android:text="Sign Out"
-                    android:enabled="false"/>
+                    android:text="Sign Out" />
             </LinearLayout>
 
 
@@ -175,16 +175,30 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="5"
-                    android:text="Get Graph Data Interactively"
-                    android:enabled="false"/>
+                    android:enabled="false"
+                    android:text="Get Graph Data Interactively" />
 
                 <Button
                     android:id="@+id/btn_callGraphSilently"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="5"
-                    android:text="Get Graph Data Silently"
-                    android:enabled="false"/>
+                    android:enabled="false"
+                    android:text="Get Graph Data Silently" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="10">
+
+                <Button
+                    android:id="@+id/btn_signinagain"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"
+                    android:text="Sign In Again" />
             </LinearLayout>
 
 
