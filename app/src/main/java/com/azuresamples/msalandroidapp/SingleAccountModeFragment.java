@@ -172,7 +172,7 @@ public class SingleAccountModeFragment extends Fragment {
 
                 /**
                  * If acquireTokenSilent() returns an error that requires an interaction (MsalUiRequiredException),
-                 * invoke acquireToken() to have the user resolve the interrupt interactively.
+                 * invoke signInAgain() to have the user resolve the interrupt interactively.
                  *
                  * Some example scenarios are
                  *  - password change
