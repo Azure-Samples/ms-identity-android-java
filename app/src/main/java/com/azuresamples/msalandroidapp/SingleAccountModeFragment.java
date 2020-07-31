@@ -44,7 +44,6 @@ import com.microsoft.identity.client.IAccount;
 import com.microsoft.identity.client.IAuthenticationResult;
 import com.microsoft.identity.client.IPublicClientApplication;
 import com.microsoft.identity.client.ISingleAccountPublicClientApplication;
-import com.microsoft.identity.client.Prompt;
 import com.microsoft.identity.client.PublicClientApplication;
 import com.microsoft.identity.client.SilentAuthenticationCallback;
 import com.microsoft.identity.client.exception.MsalClientException;
@@ -68,7 +67,6 @@ public class SingleAccountModeFragment extends Fragment {
 
     /* UI & Debugging Variables */
     Button signInButton;
-    Button signInAgainButton;
     Button signOutButton;
     Button callGraphApiInteractiveButton;
     Button callGraphApiSilentButton;
@@ -118,7 +116,6 @@ public class SingleAccountModeFragment extends Fragment {
      */
     private void initializeUI(@NonNull final View view) {
         signInButton = view.findViewById(R.id.btn_signIn);
-        signInAgainButton = view.findViewById(R.id.btn_signinagain);
         signOutButton = view.findViewById(R.id.btn_removeAccount);
         callGraphApiInteractiveButton = view.findViewById(R.id.btn_callGraphInteractively);
         callGraphApiSilentButton = view.findViewById(R.id.btn_callGraphSilently);
@@ -138,13 +135,6 @@ public class SingleAccountModeFragment extends Fragment {
                 }
 
                 mSingleAccountApp.signIn(getActivity(), null, getScopes(), getAuthInteractiveCallback());
-            }
-        });
-
-        signInAgainButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mSingleAccountApp.signInAgain(getActivity(), getScopes(), Prompt.LOGIN, getAuthInteractiveCallback());
             }
         });
 
