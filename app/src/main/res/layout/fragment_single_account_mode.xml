@@ -171,11 +171,11 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/btn_callGraphInteractively"
+                    android:id="@+id/btn_signInAgain"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="5"
-                    android:text="Get Graph Data Interactively"
+                    android:text="Sign in Again"
                     android:enabled="false"/>
 
                 <Button

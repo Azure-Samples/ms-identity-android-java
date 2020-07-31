@@ -44,6 +44,7 @@ import com.microsoft.identity.client.IAccount;
 import com.microsoft.identity.client.IAuthenticationResult;
 import com.microsoft.identity.client.IPublicClientApplication;
 import com.microsoft.identity.client.ISingleAccountPublicClientApplication;
+import com.microsoft.identity.client.Prompt;
 import com.microsoft.identity.client.PublicClientApplication;
 import com.microsoft.identity.client.SilentAuthenticationCallback;
 import com.microsoft.identity.client.exception.MsalClientException;
@@ -67,8 +68,8 @@ public class SingleAccountModeFragment extends Fragment {
 
     /* UI & Debugging Variables */
     Button signInButton;
+    Button signInAgainButton;
     Button signOutButton;
-    Button callGraphApiInteractiveButton;
     Button callGraphApiSilentButton;
     TextView scopeTextView;
     TextView graphResourceTextView;
@@ -117,7 +118,7 @@ public class SingleAccountModeFragment extends Fragment {
     private void initializeUI(@NonNull final View view) {
         signInButton = view.findViewById(R.id.btn_signIn);
         signOutButton = view.findViewById(R.id.btn_removeAccount);
-        callGraphApiInteractiveButton = view.findViewById(R.id.btn_callGraphInteractively);
+        signInAgainButton = view.findViewById(R.id.btn_signInAgain);
         callGraphApiSilentButton = view.findViewById(R.id.btn_callGraphSilently);
         scopeTextView = view.findViewById(R.id.scope);
         graphResourceTextView = view.findViewById(R.id.msgraph_url);
@@ -163,22 +164,13 @@ public class SingleAccountModeFragment extends Fragment {
             }
         });
 
-        callGraphApiInteractiveButton.setOnClickListener(new View.OnClickListener() {
+        signInAgainButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (mSingleAccountApp == null) {
                     return;
                 }
 
-                /**
-                 * If acquireTokenSilent() returns an error that requires an interaction (MsalUiRequiredException),
-                 * invoke acquireToken() to have the user resolve the interrupt interactively.
-                 *
-                 * Some example scenarios are
-                 *  - password change
-                 *  - the resource you're acquiring a token for has a stricter set of requirement than your Single Sign-On refresh token.
-                 *  - you're introducing a new scope which the user has never consented for.
-                 */
-                mSingleAccountApp.acquireToken(getActivity(), getScopes(), getAuthInteractiveCallback());
+                mSingleAccountApp.signInAgain(getActivity(), getScopes(), Prompt.LOGIN, getAuthInteractiveCallback());
             }
         });
 
@@ -380,13 +372,13 @@ public class SingleAccountModeFragment extends Fragment {
         if (mAccount != null) {
             signInButton.setEnabled(false);
             signOutButton.setEnabled(true);
-            callGraphApiInteractiveButton.setEnabled(true);
+            signInAgainButton.setEnabled(true);
             callGraphApiSilentButton.setEnabled(true);
             currentUserTextView.setText(mAccount.getUsername());
         } else {
             signInButton.setEnabled(true);
             signOutButton.setEnabled(false);
-            callGraphApiInteractiveButton.setEnabled(false);
+            signInAgainButton.setEnabled(false);
             callGraphApiSilentButton.setEnabled(false);
             currentUserTextView.setText("None");
         }
