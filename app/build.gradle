@@ -6,7 +6,7 @@ allprojects {
         google()
         mavenLocal()
         maven {
-            url 'https://pkgs.dev.azure.com/MicrosoftDeviceSDK/DuoSDK-Public/_packaging/Duo-SDK-Feed%40Local/maven/v1'
+            url 'https://pkgs.dev.azure.com/MicrosoftDeviceSDK/DuoSDK-Public/_packaging/Duo-SDK-Feed/maven/v1'
         }
         maven {
             name "vsts-maven-adal-android"
