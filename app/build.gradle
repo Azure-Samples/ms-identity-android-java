@@ -2,6 +2,10 @@ apply plugin: 'com.android.application'
 
 def msalVersion = "2.+"
 
+if (project.hasProperty("distMsalVersion")) {
+    msalVersion = distMsalVersion
+}
+
 allprojects {
     repositories {
         mavenCentral()
