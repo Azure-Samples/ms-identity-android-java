@@ -47,7 +47,7 @@ import javax.annotation.Nonnull;
  */
 public class StaticTokenAuthProvider extends BaseAuthenticationProvider {
 
-    private String mAccessToken;
+    private final String mAccessToken;
 
     public StaticTokenAuthProvider(String accessToken) {
         mAccessToken = accessToken;
