@@ -94,6 +94,6 @@ public class MSGraphRequestWrapper {
         return graphClient.customRequest(relativeUrl)
             .buildRequest()
             .getAsync()
-            .thenApply(response -> graphClient.getSerializer().serializeObject(response));
+            .thenApply(response -> response.toString());
     }
 }
