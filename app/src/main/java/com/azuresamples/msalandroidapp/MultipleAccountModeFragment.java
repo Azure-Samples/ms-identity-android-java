@@ -23,9 +23,11 @@
 
 package com.azuresamples.msalandroidapp;
 
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -230,6 +232,7 @@ public class MultipleAccountModeFragment extends Fragment {
     private SilentAuthenticationCallback getAuthSilentCallback() {
         return new SilentAuthenticationCallback() {
 
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onSuccess(IAuthenticationResult authenticationResult) {
                 Log.d(TAG, "Successfully authenticated");
@@ -304,26 +307,20 @@ public class MultipleAccountModeFragment extends Fragment {
      * If you're developing an app for sovereign cloud users, please change the Microsoft Graph Resource URL accordingly.
      * https://docs.microsoft.com/en-us/graph/deployments#microsoft-graph-and-graph-explorer-service-root-endpoints
      */
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void callGraphAPI(final IAuthenticationResult authenticationResult) {
-        MSGraphRequestWrapper.callGraphAPIUsingVolley(
-                getContext(),
-                graphResourceTextView.getText().toString(),
-                authenticationResult.getAccessToken(),
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        /* Successfully called graph, process data and send to UI */
-                        Log.d(TAG, "Response: " + response.toString());
-                        displayGraphResult(response);
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d(TAG, "Error: " + error.toString());
-                        displayError(error);
-                    }
-                });
+        MSGraphRequestWrapper.callGraphAPI(
+            graphResourceTextView.getText().toString(),
+            authenticationResult.getAccessToken())
+            .thenAccept(json -> {
+                Log.d(TAG, "Response: " + json);
+                displayGraphResult(json);
+            })
+            .exceptionally(exception -> {
+                Log.d(TAG, "Error: " + exception.toString());
+                displayError(exception);
+                return null;
+            });
     }
 
     //
@@ -338,14 +335,14 @@ public class MultipleAccountModeFragment extends Fragment {
     /**
      * Display the graph response
      */
-    private void displayGraphResult(@NonNull final JSONObject graphResponse) {
-        logTextView.setText(graphResponse.toString());
+    private void displayGraphResult(@NonNull final String graphResponse) {
+        logTextView.setText(graphResponse);
     }
 
     /**
      * Display the error message
      */
-    private void displayError(@NonNull final Exception exception) {
+    private void displayError(@NonNull final Throwable exception) {
         logTextView.setText(exception.toString());
     }
 
