@@ -60,6 +60,6 @@ public class StaticTokenAuthProvider extends BaseAuthenticationProvider {
         if (shouldAuthenticateRequestWithUrl(requestUrl)) {
             return CompletableFuture.completedFuture(mAccessToken);
         }
-        return null;
+        return CompletableFuture.completedFuture(null);
     }
 }
