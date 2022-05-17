@@ -9,10 +9,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <!-- Adding configChanges flags to MainActivity in order to make sure the app doesn't behave erratically when a YubiKey is plugged in -->
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:configChanges="orientation|keyboardHidden|screenSize|smallestScreenSize|screenLayout|keyboard">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
