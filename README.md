@@ -122,6 +122,7 @@ To run this sample, you'll need:
 * Android SDK
 * An internet connection
 * An Azure Active Directory (Azure AD) tenant. For more information on how to get an Azure AD tenant, see [How to get an Azure AD tenant](https://azure.microsoft.com/documentation/articles/active-directory-howto-tenant/)
+    * For Customer Identity and Access Management (CIAM), they will need to designate the tenant as a CIAM tenant as it is being created.
 * One or more user accounts in your Azure AD tenant.
 
 ## Steps to run the app
@@ -404,6 +405,17 @@ If you'd like to use your own app registration, you will also need to update B2C
         multipleAccountPublicClientApplication.removeAccount(account);
     }
     ```
+
+### CIAMModeFragment class
+
+This class is used to support CIAM users and confirming that the user can authenticate and get an access token. The CIAM implementation is frequently being updated, so this section of the sample could change in the near future. Please note that at this time, CIAM does not integrate with MS Graph, so we could not fetch MS Graph information in this fragment of the sample app. Instead, we will output the access token to confirm successful authentication. Below is a diaram showing this shortened approach:
+
+![Flowchart](ReadmeFiles/CiamAuthflow.png)
+
+This fragment's `acquireToken`, `getAccounts`, `acquireTokenSilentAsync`, and `removeAccount` are similar to those found in `MultipleAccountModeFragment`, but updated to use non-deprecated methods.
+
+> **Note:**
+> This fragment reads configuration information from `auth_config_ciam.json`. This JSON uses a tenant that is in-accessible to external developers. To get this fragment of the sample to work, you will have to manual update the `authority_url` field to point towards your CIAM tenant. The url should look like this: "https://login.microsoftonline.com/YOUR.TENANT/"
 
 ## Feedback, Community Help, and Support
 

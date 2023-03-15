@@ -14,6 +14,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.microsoft.identity.client.AcquireTokenParameters;
+import com.microsoft.identity.client.AcquireTokenSilentParameters;
 import com.microsoft.identity.client.AuthenticationCallback;
 import com.microsoft.identity.client.IAccount;
 import com.microsoft.identity.client.IAuthenticationResult;
@@ -27,6 +29,7 @@ import com.microsoft.identity.client.exception.MsalServiceException;
 import com.microsoft.identity.client.exception.MsalUiRequiredException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class CIAMModeFragment extends Fragment {
@@ -131,7 +134,13 @@ public class CIAMModeFragment extends Fragment {
                  *  - the resource you're acquiring a token for has a stricter set of requirement than your SSO refresh token.
                  *  - you're introducing a new scope which the user has never consented for.
                  */
-                mCiamApp.acquireToken(getActivity(), getScopes(), getAuthInteractiveCallback());
+                final AcquireTokenParameters parameters = new AcquireTokenParameters.Builder()
+                        .startAuthorizationFromActivity(getActivity())
+                        .withScopes(Arrays.asList(getScopes()))
+                        .withCallback(getAuthInteractiveCallback())
+                        .build();
+
+                mCiamApp.acquireToken(parameters);
             }
         });
 
@@ -152,10 +161,15 @@ public class CIAMModeFragment extends Fragment {
                  * This requires an account object of the account you're obtaining a token for.
                  * (can be obtained via getAccount()).
                  */
-                mCiamApp.acquireTokenSilentAsync(getScopes(),
-                        selectedAccount,
-                        selectedAccount.getAuthority(),
-                        getAuthSilentCallback());
+                final AcquireTokenSilentParameters silentParameters = new AcquireTokenSilentParameters.Builder()
+                        .forAccount(selectedAccount)
+                        .fromAuthority(selectedAccount.getAuthority())
+                        .withScopes(Arrays.asList(getScopes()))
+                        .forceRefresh(false)
+                        .withCallback(getAuthSilentCallback())
+                        .build();
+
+                mCiamApp.acquireTokenSilentAsync(silentParameters);
             }
         });
 
