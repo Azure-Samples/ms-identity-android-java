@@ -1,33 +1,6 @@
-// Copyright (c) Microsoft Corporation.
-// All rights reserved.
-//
-// This code is licensed under the MIT License.
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files(the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions :
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
-
 package com.azuresamples.msalandroidapp;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,8 +11,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+
+import com.microsoft.identity.client.AcquireTokenParameters;
+import com.microsoft.identity.client.AcquireTokenSilentParameters;
 import com.microsoft.identity.client.AuthenticationCallback;
 import com.microsoft.identity.client.IAccount;
 import com.microsoft.identity.client.IAuthenticationResult;
@@ -52,44 +28,43 @@ import com.microsoft.identity.client.exception.MsalException;
 import com.microsoft.identity.client.exception.MsalServiceException;
 import com.microsoft.identity.client.exception.MsalUiRequiredException;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
- * Implementation sample for 'Multiple account' mode.
+ * This fragment support CIAM Authority in Multiple Account mode. Dedicated CIAM Authority support has not been fully released yet, this fragment
+ * and it's json configuration file will be updated once that release is complete (ETA Q2 2023)
  */
-public class MultipleAccountModeFragment extends Fragment {
-    private static final String TAG = MultipleAccountModeFragment.class.getSimpleName();
+public class CIAMModeFragment extends Fragment {
+    private static final String TAG = CIAMModeFragment.class.getSimpleName();
 
     /* UI & Debugging Variables */
     Button removeAccountButton;
-    Button callGraphApiInteractiveButton;
-    Button callGraphApiSilentButton;
+    Button callAcquireTokenInteractiveButton;
+    Button callAcquireTokenSilentButton;
     TextView scopeTextView;
-    TextView graphResourceTextView;
     TextView logTextView;
     Spinner accountListSpinner;
 
     /* Azure AD Variables */
-    private IMultipleAccountPublicClientApplication mMultipleAccountApp;
+    private IMultipleAccountPublicClientApplication mCiamApp;
     private List<IAccount> accountList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View view = inflater.inflate(R.layout.fragment_multiple_account_mode, container, false);
+        final View view = inflater.inflate(R.layout.fragment_ciam_mode, container, false);
         initializeUI(view);
 
-        // Creates a PublicClientApplication object with res/raw/auth_config_single_account.json
+        // Creates a PublicClientApplication object with res/raw/auth_config_ciam.json
         PublicClientApplication.createMultipleAccountPublicClientApplication(getContext(),
-                R.raw.auth_config_multiple_account,
+                R.raw.auth_config_ciam,
                 new IPublicClientApplication.IMultipleAccountApplicationCreatedListener() {
                     @Override
                     public void onCreated(IMultipleAccountPublicClientApplication application) {
-                        mMultipleAccountApp = application;
+                        mCiamApp = application;
                         loadAccounts();
                     }
 
@@ -97,8 +72,8 @@ public class MultipleAccountModeFragment extends Fragment {
                     public void onError(MsalException exception) {
                         displayError(exception);
                         removeAccountButton.setEnabled(false);
-                        callGraphApiInteractiveButton.setEnabled(false);
-                        callGraphApiSilentButton.setEnabled(false);
+                        callAcquireTokenInteractiveButton.setEnabled(false);
+                        callAcquireTokenSilentButton.setEnabled(false);
                     }
                 });
 
@@ -110,26 +85,22 @@ public class MultipleAccountModeFragment extends Fragment {
      */
     private void initializeUI(@NonNull final View view) {
         removeAccountButton = view.findViewById(R.id.btn_removeAccount);
-        callGraphApiInteractiveButton = view.findViewById(R.id.btn_callGraphInteractively);
-        callGraphApiSilentButton = view.findViewById(R.id.btn_callGraphSilently);
+        callAcquireTokenInteractiveButton = view.findViewById(R.id.btn_acquireTokenInteractively);
+        callAcquireTokenSilentButton = view.findViewById(R.id.btn_acquireTokenSilently);
         scopeTextView = view.findViewById(R.id.scope);
-        graphResourceTextView = view.findViewById(R.id.msgraph_url);
         logTextView = view.findViewById(R.id.txt_log);
         accountListSpinner = view.findViewById(R.id.account_list);
 
-        final String defaultGraphResourceUrl = MSGraphRequestWrapper.MS_GRAPH_ROOT_ENDPOINT + "v1.0/me";
-        graphResourceTextView.setText(defaultGraphResourceUrl);
-
         removeAccountButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if (mMultipleAccountApp == null) {
+                if (mCiamApp == null) {
                     return;
                 }
 
                 /**
                  * Removes the selected account and cached tokens from this app (or device, if the device is in shared mode).
                  */
-                mMultipleAccountApp.removeAccount(accountList.get(accountListSpinner.getSelectedItemPosition()),
+                mCiamApp.removeAccount(accountList.get(accountListSpinner.getSelectedItemPosition()),
                         new IMultipleAccountPublicClientApplication.RemoveAccountCallback() {
                             @Override
                             public void onRemoved() {
@@ -148,11 +119,13 @@ public class MultipleAccountModeFragment extends Fragment {
             }
         });
 
-        callGraphApiInteractiveButton.setOnClickListener(new View.OnClickListener() {
+        callAcquireTokenInteractiveButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if (mMultipleAccountApp == null) {
+                if (mCiamApp == null) {
                     return;
                 }
+
+                displayTokenResult("");
 
                 /**
                  * Acquire token interactively. It will also create an account object for the silent call as a result (to be obtained by getAccount()).
@@ -165,16 +138,24 @@ public class MultipleAccountModeFragment extends Fragment {
                  *  - the resource you're acquiring a token for has a stricter set of requirement than your SSO refresh token.
                  *  - you're introducing a new scope which the user has never consented for.
                  */
-                mMultipleAccountApp.acquireToken(getActivity(), getScopes(), getAuthInteractiveCallback());
+                final AcquireTokenParameters parameters = new AcquireTokenParameters.Builder()
+                        .startAuthorizationFromActivity(getActivity())
+                        .withScopes(Arrays.asList(getScopes()))
+                        .withCallback(getAuthInteractiveCallback())
+                        .build();
+
+                mCiamApp.acquireToken(parameters);
             }
         });
 
-        callGraphApiSilentButton.setOnClickListener(new View.OnClickListener() {
+        callAcquireTokenSilentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mMultipleAccountApp == null) {
+                if (mCiamApp == null) {
                     return;
                 }
+
+                displayTokenResult("");
 
                 final IAccount selectedAccount = accountList.get(accountListSpinner.getSelectedItemPosition());
 
@@ -184,10 +165,15 @@ public class MultipleAccountModeFragment extends Fragment {
                  * This requires an account object of the account you're obtaining a token for.
                  * (can be obtained via getAccount()).
                  */
-                mMultipleAccountApp.acquireTokenSilentAsync(getScopes(),
-                        selectedAccount,
-                        selectedAccount.getAuthority(),
-                        getAuthSilentCallback());
+                final AcquireTokenSilentParameters silentParameters = new AcquireTokenSilentParameters.Builder()
+                        .forAccount(selectedAccount)
+                        .fromAuthority(selectedAccount.getAuthority())
+                        .withScopes(Arrays.asList(getScopes()))
+                        .forceRefresh(false)
+                        .withCallback(getAuthSilentCallback())
+                        .build();
+
+                mCiamApp.acquireTokenSilentAsync(silentParameters);
             }
         });
 
@@ -205,11 +191,11 @@ public class MultipleAccountModeFragment extends Fragment {
      * Load currently signed-in accounts, if there's any.
      */
     private void loadAccounts() {
-        if (mMultipleAccountApp == null) {
+        if (mCiamApp == null) {
             return;
         }
 
-        mMultipleAccountApp.getAccounts(new IPublicClientApplication.LoadAccountsCallback() {
+        mCiamApp.getAccounts(new IPublicClientApplication.LoadAccountsCallback() {
             @Override
             public void onTaskCompleted(final List<IAccount> result) {
                 // You can use the account data to update your UI or your app database.
@@ -234,8 +220,8 @@ public class MultipleAccountModeFragment extends Fragment {
             public void onSuccess(IAuthenticationResult authenticationResult) {
                 Log.d(TAG, "Successfully authenticated");
 
-                /* Successfully got a token, use it to call a protected resource - MSGraph */
-                callGraphAPI(authenticationResult);
+                /* Display Access Token */
+                displayTokenResult("Silent Request Success:\n" + authenticationResult.getAccessToken());
             }
 
             @Override
@@ -257,7 +243,7 @@ public class MultipleAccountModeFragment extends Fragment {
 
     /**
      * Callback used for interactive request.
-     * If succeeds we use the access token to call the Microsoft Graph.
+     * If succeeds, we display the access token
      * Does not check cache.
      */
     private AuthenticationCallback getAuthInteractiveCallback() {
@@ -265,12 +251,12 @@ public class MultipleAccountModeFragment extends Fragment {
 
             @Override
             public void onSuccess(IAuthenticationResult authenticationResult) {
-                /* Successfully got a token, use it to call a protected resource - MSGraph */
+                /* Successfully got a token */
                 Log.d(TAG, "Successfully authenticated");
                 Log.d(TAG, "ID Token: " + authenticationResult.getAccount().getClaims().get("id_token"));
 
-                /* call graph */
-                callGraphAPI(authenticationResult);
+                /* Display Access Token */
+                displayTokenResult("Interactive Request Success:\n" + authenticationResult.getAccessToken());
 
                 /* Reload account asynchronously to get the up-to-date list. */
                 loadAccounts();
@@ -297,49 +283,18 @@ public class MultipleAccountModeFragment extends Fragment {
         };
     }
 
-    /**
-     * Make an HTTP request to obtain MSGraph data
-     *
-     * The sample is using the global service cloud as a default.
-     * If you're developing an app for sovereign cloud users, please change the Microsoft Graph Resource URL accordingly.
-     * https://docs.microsoft.com/en-us/graph/deployments#microsoft-graph-and-graph-explorer-service-root-endpoints
-     */
-    private void callGraphAPI(final IAuthenticationResult authenticationResult) {
-        MSGraphRequestWrapper.callGraphAPIUsingVolley(
-                getContext(),
-                graphResourceTextView.getText().toString(),
-                authenticationResult.getAccessToken(),
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        /* Successfully called graph, process data and send to UI */
-                        Log.d(TAG, "Response: " + response.toString());
-                        displayGraphResult(response);
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d(TAG, "Error: " + error.toString());
-                        displayError(error);
-                    }
-                });
-    }
-
     //
     // Helper methods manage UI updates
     // ================================
-    // displayGraphResult() - Display the graph response
-    // displayError() - Display the graph response
-    // updateSignedInUI() - Updates UI when the user is signed in
-    // updateSignedOutUI() - Updates UI when app sign out succeeds
+    // displayError() - Display the error message
+    // updateUI() - Updates UI based on account list
     //
 
     /**
-     * Display the graph response
+     * Display the access token
      */
-    private void displayGraphResult(@NonNull final JSONObject graphResponse) {
-        logTextView.setText(graphResponse.toString());
+    private void displayTokenResult(@NonNull final String accessToken) {
+        logTextView.setText(accessToken);
     }
 
     /**
@@ -356,12 +311,12 @@ public class MultipleAccountModeFragment extends Fragment {
 
         if (result.size() > 0) {
             removeAccountButton.setEnabled(true);
-            callGraphApiInteractiveButton.setEnabled(true);
-            callGraphApiSilentButton.setEnabled(true);
+            callAcquireTokenInteractiveButton.setEnabled(true);
+            callAcquireTokenSilentButton.setEnabled(true);
         } else {
             removeAccountButton.setEnabled(false);
-            callGraphApiInteractiveButton.setEnabled(true);
-            callGraphApiSilentButton.setEnabled(false);
+            callAcquireTokenInteractiveButton.setEnabled(true);
+            callAcquireTokenSilentButton.setEnabled(false);
         }
 
         final ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(

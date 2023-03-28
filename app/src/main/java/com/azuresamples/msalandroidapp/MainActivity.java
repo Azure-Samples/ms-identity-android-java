@@ -49,7 +49,8 @@ public class MainActivity extends AppCompatActivity
     enum AppFragment {
         SingleAccount,
         MultipleAccount,
-        B2C
+        B2C,
+        CIAM
     }
 
     private AppFragment mCurrentFragment;
@@ -105,6 +106,10 @@ public class MainActivity extends AppCompatActivity
                     setCurrentFragment(AppFragment.B2C);
                 }
 
+                if (id == R.id.nav_ciam) {
+                    setCurrentFragment(AppFragment.CIAM);
+                }
+
                 drawer.removeDrawerListener(this);
             }
 
@@ -139,6 +144,10 @@ public class MainActivity extends AppCompatActivity
             case B2C:
                 getSupportActionBar().setTitle("B2C Mode");
                 return;
+
+            case CIAM:
+                getSupportActionBar().setTitle("CIAM Mode");
+                return;
         }
     }
 
@@ -154,6 +163,10 @@ public class MainActivity extends AppCompatActivity
 
             case B2C:
                 attachFragment(new B2CModeFragment());
+                return;
+
+            case CIAM:
+                attachFragment(new CIAMModeFragment());
                 return;
         }
     }
