@@ -32,6 +32,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * This fragment support CIAM Authority in Multiple Account mode. Dedicated CIAM Authority support has not been fully released yet, this fragment
+ * and it's json configuration file will be updated once that release is complete (ETA Q2 2023)
+ */
 public class CIAMModeFragment extends Fragment {
     private static final String TAG = CIAMModeFragment.class.getSimpleName();
 

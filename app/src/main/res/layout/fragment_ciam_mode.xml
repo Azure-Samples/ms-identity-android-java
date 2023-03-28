@@ -96,7 +96,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="3"
-                    android:text="At this moment, CIAM does not support MS Graph, so we cannot call the graph API in this fragment. Instead we will simply output the access token after a succesful request."
+                    android:text="@string/ciam_warning_text"
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
