@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 
-def msalVersion = "3.+"
+def msalVersion = "4.+"
 
 if (project.hasProperty("distMsalVersion")) {
     msalVersion = distMsalVersion
@@ -22,7 +22,6 @@ allprojects {
                 password System.getenv("ENV_VSTS_MVN_ANDROIDADAL_ACCESSTOKEN") != null ? System.getenv("ENV_VSTS_MVN_ANDROIDADAL_ACCESSTOKEN") : project.findProperty("vstsMavenAccessToken")
             }
         }
-        jcenter()
     }
 }
 
