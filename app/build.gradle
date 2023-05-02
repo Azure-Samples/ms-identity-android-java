@@ -94,7 +94,7 @@ dependencies {
     implementation "com.google.android.material:material:$rootProject.ext.materialVersion"
     implementation "androidx.constraintlayout:constraintlayout:$rootProject.ext.constraintLayoutVersion"
     implementation "androidx.legacy:legacy-support-v4:$rootProject.ext.legacySupportV4Version"
-    implementation 'com.android.volley:volley:1.1.1'
+    implementation 'com.android.volley:volley:1.2.1'
 
     if (findProject(':msal') != null) {
         // For developer team only.
