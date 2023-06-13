@@ -7,7 +7,7 @@
   "authorities" : [
     {
       "type": "CIAM",
-      "authority_url": "https://TENANT_DOMAIN.ciamlogin.com/TENANT_DOMAIN.onmicrosoft.com/"
+      "authority_url": "https://TENANT_NAME.ciamlogin.com/TENANT_NAME.onmicrosoft.com/"
     }
   ]
 }
