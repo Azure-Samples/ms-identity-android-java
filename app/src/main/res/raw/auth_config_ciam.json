@@ -1,13 +1,13 @@
 {
-  "client_id" : "b8e9d222-c4ee-414c-ac29-b0eff1f32400",
+  "client_id" : "CLIENT_ID",
   "authorization_user_agent" : "DEFAULT",
   "redirect_uri" : "msauth://com.azuresamples.msalandroidapp/1wIqXSqBj7w%2Bh11ZifsnqwgyKrY%3D",
   "account_mode" : "MULTIPLE",
   "broker_redirect_uri_registered": true,
   "authorities" : [
     {
-      "type": "AAD",
-      "authority_url": "https://login.microsoftonline.com/msidlabciam1.onmicrosoft.com/"
+      "type": "CIAM",
+      "authority_url": "https://TENANT_NAME.ciamlogin.com/TENANT_NAME.onmicrosoft.com/"
     }
   ]
 }

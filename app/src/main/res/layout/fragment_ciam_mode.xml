@@ -46,7 +46,7 @@
                         android:id="@+id/scope"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="https://substrate.office.com/profile//User.Read"
+                        android:text="user.read"
                         android:textSize="12sp" />
 
                     <TextView

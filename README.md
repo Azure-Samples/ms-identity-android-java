@@ -415,7 +415,7 @@ This class is used to support CIAM users and confirming that the user can authen
 This fragment's `acquireToken`, `getAccounts`, `acquireTokenSilentAsync`, and `removeAccount` are similar to those found in `MultipleAccountModeFragment`, but updated to use non-deprecated methods.
 
 > **Note:**
-> This fragment reads configuration information from `auth_config_ciam.json`. This JSON uses a tenant that is in-accessible to external developers. To get this fragment of the sample to work, you will have to manual update the `authority_url` field to point towards your CIAM tenant. The url should look like this: "https://login.microsoftonline.com/YOUR.TENANT/"
+ This fragment reads configuration information from `auth_config_ciam.json`. To get this fragment of the sample to work, you will have to manually input the `client_id` and `authority_url` fields to point towards your CIAM tenant (reference the [Register your Own Application section](#register-your-own-application-optional) for more information). The `authority_url` should look like this: "https://TENANT_NAME.ciamlogin.com/TENANT_NAME.onmicrosoft.com/". The authority type should remain as `CIAM`.
 
 ## Feedback, Community Help, and Support
 
