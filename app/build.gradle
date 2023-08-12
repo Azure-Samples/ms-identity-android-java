@@ -57,7 +57,7 @@ android {
     // Host apps that use a library with version 8 must also be able to handle version 8 as well.
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
 
     buildTypes {
