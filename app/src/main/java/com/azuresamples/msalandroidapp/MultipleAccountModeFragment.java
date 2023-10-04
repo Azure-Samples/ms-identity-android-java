@@ -40,6 +40,8 @@ import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.microsoft.identity.client.AcquireTokenParameters;
+import com.microsoft.identity.client.AcquireTokenSilentParameters;
 import com.microsoft.identity.client.AuthenticationCallback;
 import com.microsoft.identity.client.IAccount;
 import com.microsoft.identity.client.IAuthenticationResult;
@@ -55,6 +57,7 @@ import com.microsoft.identity.client.exception.MsalUiRequiredException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -126,7 +129,7 @@ public class MultipleAccountModeFragment extends Fragment {
                     return;
                 }
 
-                /**
+                /*
                  * Removes the selected account and cached tokens from this app (or device, if the device is in shared mode).
                  */
                 mMultipleAccountApp.removeAccount(accountList.get(accountListSpinner.getSelectedItemPosition()),
@@ -154,7 +157,12 @@ public class MultipleAccountModeFragment extends Fragment {
                     return;
                 }
 
-                /**
+                final AcquireTokenParameters parameters = new AcquireTokenParameters.Builder()
+                        .startAuthorizationFromActivity(getActivity())
+                        .withScopes(Arrays.asList(getScopes()))
+                        .withCallback(getAuthInteractiveCallback())
+                        .build();
+                /*
                  * Acquire token interactively. It will also create an account object for the silent call as a result (to be obtained by getAccount()).
                  *
                  * If acquireTokenSilent() returns an error that requires an interaction,
@@ -165,7 +173,7 @@ public class MultipleAccountModeFragment extends Fragment {
                  *  - the resource you're acquiring a token for has a stricter set of requirement than your SSO refresh token.
                  *  - you're introducing a new scope which the user has never consented for.
                  */
-                mMultipleAccountApp.acquireToken(getActivity(), getScopes(), getAuthInteractiveCallback());
+                mMultipleAccountApp.acquireToken(parameters);
             }
         });
 
@@ -178,16 +186,21 @@ public class MultipleAccountModeFragment extends Fragment {
 
                 final IAccount selectedAccount = accountList.get(accountListSpinner.getSelectedItemPosition());
 
-                /**
+                final AcquireTokenSilentParameters silentParameters = new AcquireTokenSilentParameters.Builder()
+                        .forAccount(selectedAccount)
+                        .fromAuthority(selectedAccount.getAuthority())
+                        .withScopes(Arrays.asList(getScopes()))
+                        .forceRefresh(false)
+                        .withCallback(getAuthSilentCallback())
+                        .build();
+
+                /*
                  * Performs acquireToken without interrupting the user.
                  *
                  * This requires an account object of the account you're obtaining a token for.
                  * (can be obtained via getAccount()).
                  */
-                mMultipleAccountApp.acquireTokenSilentAsync(getScopes(),
-                        selectedAccount,
-                        selectedAccount.getAuthority(),
-                        getAuthSilentCallback());
+                mMultipleAccountApp.acquireTokenSilentAsync(silentParameters);
             }
         });
 
