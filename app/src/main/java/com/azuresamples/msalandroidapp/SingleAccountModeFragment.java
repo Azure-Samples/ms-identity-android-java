@@ -182,6 +182,7 @@ public class SingleAccountModeFragment extends Fragment {
                         .startAuthorizationFromActivity(getActivity())
                         .withScopes(Arrays.asList(getScopes()))
                         .withCallback(getAuthInteractiveCallback())
+                        .forAccount(mAccount)
                         .build();
                 /*
                  * If acquireTokenSilent() returns an error that requires an interaction (MsalUiRequiredException),
@@ -205,6 +206,7 @@ public class SingleAccountModeFragment extends Fragment {
 
                 final AcquireTokenSilentParameters silentParameters = new AcquireTokenSilentParameters.Builder()
                         .fromAuthority(mAccount.getAuthority())
+                        .forAccount(mAccount)
                         .withScopes(Arrays.asList(getScopes()))
                         .withCallback(getAuthSilentCallback())
                         .build();
