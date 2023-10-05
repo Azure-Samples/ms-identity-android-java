@@ -39,12 +39,15 @@ import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.microsoft.identity.client.AcquireTokenParameters;
+import com.microsoft.identity.client.AcquireTokenSilentParameters;
 import com.microsoft.identity.client.AuthenticationCallback;
 import com.microsoft.identity.client.IAccount;
 import com.microsoft.identity.client.IAuthenticationResult;
 import com.microsoft.identity.client.IPublicClientApplication;
 import com.microsoft.identity.client.ISingleAccountPublicClientApplication;
 import com.microsoft.identity.client.PublicClientApplication;
+import com.microsoft.identity.client.SignInParameters;
 import com.microsoft.identity.client.SilentAuthenticationCallback;
 import com.microsoft.identity.client.exception.MsalClientException;
 import com.microsoft.identity.client.exception.MsalException;
@@ -52,6 +55,7 @@ import com.microsoft.identity.client.exception.MsalServiceException;
 import com.microsoft.identity.client.exception.MsalUiRequiredException;
 
 import org.json.JSONObject;
+import java.util.Arrays;
 
 /**
  * Implementation sample for 'Single account' mode.
@@ -94,10 +98,10 @@ public class SingleAccountModeFragment extends Fragment {
                 new IPublicClientApplication.ISingleAccountApplicationCreatedListener() {
                     @Override
                     public void onCreated(ISingleAccountPublicClientApplication application) {
-                        /**
+                        /*
                          * This test app assumes that the app is only going to support one account.
                          * This requires "account_mode" : "SINGLE" in the config json file.
-                         **/
+                         */
                         mSingleAccountApp = application;
                         loadAccount();
                     }
@@ -133,8 +137,13 @@ public class SingleAccountModeFragment extends Fragment {
                 if (mSingleAccountApp == null) {
                     return;
                 }
-
-                mSingleAccountApp.signIn(getActivity(), null, getScopes(), getAuthInteractiveCallback());
+                final SignInParameters signInParameters = SignInParameters.builder()
+                        .withActivity(getActivity())
+                        .withLoginHint(null)
+                        .withScopes(Arrays.asList(getScopes()))
+                        .withCallback(getAuthInteractiveCallback())
+                        .build();
+                mSingleAccountApp.signIn(signInParameters);
             }
         });
 
@@ -144,7 +153,7 @@ public class SingleAccountModeFragment extends Fragment {
                     return;
                 }
 
-                /**
+                /*
                  * Removes the signed-in account and cached tokens from this app (or device, if the device is in shared mode).
                  */
                 mSingleAccountApp.signOut(new ISingleAccountPublicClientApplication.SignOutCallback() {
@@ -169,7 +178,13 @@ public class SingleAccountModeFragment extends Fragment {
                     return;
                 }
 
-                /**
+                final AcquireTokenParameters parameters = new AcquireTokenParameters.Builder()
+                        .startAuthorizationFromActivity(getActivity())
+                        .withScopes(Arrays.asList(getScopes()))
+                        .withCallback(getAuthInteractiveCallback())
+                        .forAccount(mAccount)
+                        .build();
+                /*
                  * If acquireTokenSilent() returns an error that requires an interaction (MsalUiRequiredException),
                  * invoke acquireToken() to have the user resolve the interrupt interactively.
                  *
@@ -178,7 +193,7 @@ public class SingleAccountModeFragment extends Fragment {
                  *  - the resource you're acquiring a token for has a stricter set of requirement than your Single Sign-On refresh token.
                  *  - you're introducing a new scope which the user has never consented for.
                  */
-                mSingleAccountApp.acquireToken(getActivity(), getScopes(), getAuthInteractiveCallback());
+                mSingleAccountApp.acquireToken(parameters);
             }
         });
 
@@ -189,11 +204,17 @@ public class SingleAccountModeFragment extends Fragment {
                     return;
                 }
 
-                /**
+                final AcquireTokenSilentParameters silentParameters = new AcquireTokenSilentParameters.Builder()
+                        .fromAuthority(mAccount.getAuthority())
+                        .forAccount(mAccount)
+                        .withScopes(Arrays.asList(getScopes()))
+                        .withCallback(getAuthSilentCallback())
+                        .build();
+                /*
                  * Once you've signed the user in,
                  * you can perform acquireTokenSilent to obtain resources without interrupting the user.
                  */
-                mSingleAccountApp.acquireTokenSilentAsync(getScopes(), mAccount.getAuthority(), getAuthSilentCallback());
+                mSingleAccountApp.acquireTokenSilentAsync(silentParameters);
             }
         });
 
@@ -203,7 +224,7 @@ public class SingleAccountModeFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        /**
+        /*
          * The account may have been removed from the device (if broker is in use).
          *
          * In shared device mode, the account might be signed in/out by other apps while this app is not in focus.
