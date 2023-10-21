@@ -172,14 +172,14 @@ To **create** an app registration,
 3. On the next screen click on `Authentication` and then `Add Platform`.
 4. Select `Android` from the options shown on the right hand side.
 5. On the 'Configure your Android App' page
-    * Enter the Package Name from your Android Manifest.
-    * Enter the Signature Hash. Follow the instructions in the portal to generate Signature hash.
+    * Enter the Package Name from your Android Manifest. In the context of current sample, please update the package name as  `com.azuresamples.msalandroidapp`. 
+    * Enter the Signature Hash. As mentioned in the Note section of **Steps to run the sample**, sample is using the `debug.keystore` from the project folder under gradle. Since signature hash `1wIqXSqBj7w+h11ZifsnqwgyKrY=` is preconfigured in the sample, please upate the same value under the Signature Hash field of  Azure portal. If you want to use the different `debug.keystore` then, please follow the instructions in the portal to generate Signature hash.
     * Click `Configure` at the bottom of the page.
-6.  Take note of the ***MSAL Configuration*** as it is used later in `AndroidManifest.xml` and `auth_config.json`.
+6.  Take note of the ***MSAL Configuration*** as it is used later in `AndroidManifest.xml`, `auth_config_single_account.json` and `auth_config_multiple_account.json`.
 
-**Configure** the sample application with your app registration by replacing the sample code in `auth_config.json` and `AndroidManifest.xml`
+**Configure** the sample application to work with your newly created app registration.
 
-1. Copy and paste the ***MSAL Configuration*** JSON from the Azure portal into `auth_config_multiple_account.json` under the res\raw folder.
+1. Copy and paste the ***MSAL Configuration*** JSON from the Azure portal into `auth_config_single_account.json` and `auth_config_multiple_account.json` files under the res\raw folder. While pasting, you can exclude the first line `com.azuresamples.msalandroidappandroid:host="com.azuresamples.msalandroidapp"`and update only the valid JSON content. 
 
 2. Inside the `AndroidManifest.xml`, 
     
@@ -195,7 +195,7 @@ To **create** an app registration,
         android:path="<SignatureHash>"
         ```
     
-            - `auth_config.json` contains this information as a reference inside the `redirect_uri` field.
+            - `auth_config_single_account.json` and `auth_config_multiple_account.json` contains this information as a reference inside the `redirect_uri` field.
             - The Signature Hash should NOT be URL encoded in the `AndroidManifest.xml`.
         Refer [Azure Active Directory Android Quickstart](https://docs.microsoft.com/azure/active-directory/develop/quickstart-v2-android) for more details
 
