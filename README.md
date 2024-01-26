@@ -1,15 +1,15 @@
 # Use MSAL in an Android app to sign-in users and call Microsoft Graph
 
-| [Getting Started](https://docs.microsoft.com/azure/active-directory/develop/guidedsetups/active-directory-android)| [Library](https://github.com/AzureAD/microsoft-authentication-library-for-android) | [API Reference](http://javadoc.io/doc/com.microsoft.identity.client/msal) | [Support](README.md#feedback-community-help-and-support)
+| [Getting Started](https://docs.microsoft.com/azure/active-directory/develop/guidedsetups/active-directory-android)| [Library](https://www.microsoft.com/en-us/security/business/identity-access/microsoft-entra-id) | [API Reference](http://javadoc.io/doc/com.microsoft.identity.client/msal) | [Support](README.md#feedback-community-help-and-support)
 | --- | --- | --- | --- |
 
 ![Build Badge](https://identitydivision.visualstudio.com/_apis/public/build/definitions/a7934fdd-dcde-4492-a406-7fad6ac00e17/500/badge)
 
 ## About the Sample
 
-The MSAL Android library gives your app the ability to begin using the [Microsoft identity platform](https://aka.ms/aaddev) by supporting [Azure Active Directory](https://azure.microsoft.com/services/active-directory/) and [Microsoft Accounts](https://account.microsoft.com) in a converged experience using industry standard OAuth2 and OpenID Connect protocols.
+The MSAL Android library gives your app the ability to begin using the [Microsoft identity platform](https://aka.ms/aaddev) by supporting [Microsoft Entra ID](https://azure.microsoft.com/services/active-directory/) and [Microsoft Accounts](https://account.microsoft.com) in a converged experience using industry standard OAuth2 and OpenID Connect protocols.
 
-This sample walks you through the process of integrating authentication with Microsoft Identity Platform (formerly Azure Active Directory for developers) in your android application. In this sample we'd walk you through the code you need to write in the various lifecycle events of your app to achieve the following objectives.
+This sample walks you through the process of integrating authentication with Microsoft Identity Platform (formerly Microsoft Entra ID for developers) in your android application. In this sample we'd walk you through the code you need to write in the various lifecycle events of your app to achieve the following objectives.
 
 * Sign-in a user
 * Device-wide SSO and Conditional Access support through the Auth Broker
@@ -21,7 +21,7 @@ This sample walks you through the process of integrating authentication with Mic
 
 ## Scenario
 
-This sample app is a [multi-tenant](https://docs.microsoft.com/azure/active-directory/develop/setup-multi-tenant-app) app, which means that it can sign-in users from any Azure AD tenant and Microsoft Accounts.  It also demonstrates how a developer can build apps to connect with enterprise users and access their Azure + O365 data via [Microsoft Graph](https://docs.microsoft.com/graph/overview).
+This sample app is a [multi-tenant](https://docs.microsoft.com/azure/active-directory/develop/setup-multi-tenant-app) app, which means that it can sign-in users from any Microsoft Entra tenant and Microsoft Accounts.  It also demonstrates how a developer can build apps to connect with enterprise users and access their Azure + O365 data via [Microsoft Graph](https://docs.microsoft.com/graph/overview).
 During the auth flow, the users will be required to sign-in first, if it is their first time signing-in to the app, the user would be asked to consent to the [permissions](https://docs.microsoft.com/azure/active-directory/develop/v1-permissions-and-consent) required by the application.
 
 The majority of the logic in this sample shows how to sign-in an end user and make a call to the Microsoft Graph to get basic information about the signed-in user.
@@ -74,9 +74,9 @@ deviceModeTextView.setText(mSingleAccountApp.isSharedDevice() ? "Shared" : "Non-
 ```
 
 > [!NOTE]
-> You can only [put a device in to Shared Mode](https://docs.microsoft.com/azure/active-directory/develop/tutorial-v2-shared-device-mode#set-up-an-android-device-in-shared-mode) using the [Authenticator app](https://www.microsoft.com/account/authenticator) and with a user who is in the [Cloud Device Administrator](https://docs.microsoft.com/azure/active-directory/users-groups-roles/directory-assign-admin-roles#cloud-device-administrator) role. You can configure the membership of your Organizational Roles by going to the Azure Portal and selecting:
+> You can only [put a device in to Shared Mode](https://learn.microsoft.com/en-us/entra/identity-platform/tutorial-v2-shared-device-mode#set-up-an-android-device-in-shared-mode) using the [Authenticator app](https://www.microsoft.com/account/authenticator) and with a user who is in the [Cloud Device Administrator](https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/permissions-reference#cloud-device-administrator) role. You can configure the membership of your Organizational Roles by going to the Microsoft Entra admin center and selecting:
 >
-> Azure Active Directory -> Roles and Administrators -> Cloud Device Administrator  
+> Microsoft Entra ID -> Show more -> Roles and Administrators -> Roles and Administrators -> Cloud Device Administrator  
 
 ## Multiple Account Mode
 
@@ -121,9 +121,9 @@ To run this sample, you'll need:
 
 * Android SDK
 * An internet connection
-* An Azure Active Directory (Azure AD) tenant. For more information on how to get an Azure AD tenant, see [How to get an Azure AD tenant](https://azure.microsoft.com/documentation/articles/active-directory-howto-tenant/)
+* a Microsoft Entra tenant. For more information on how to get a Microsoft Entra tenant, see [How to get a Microsoft Entra tenant](https://learn.microsoft.com/en-us/entra/external-id/customers/how-to-create-customer-tenant-portal)
     * For Customer Identity and Access Management (CIAM), they will need to designate the tenant as a CIAM tenant as it is being created.
-* One or more user accounts in your Azure AD tenant.
+* One or more user accounts in your Microsoft Entra tenant.
 
 ## Steps to run the app
 
@@ -152,7 +152,7 @@ From menu, select *Run* > *Run 'app'*. Once the app launches,
 * Multiple Account Mode: Select this to explore Multiple Account 
     * B2C Mode: Select this to Explore B2C
 2. Depending on the mode selected, click on `sign-in` or `Get Graph Data Interactively` or `run user flow` , it takes you to  Sign in (`add account`) page.
-3. Sign in with AAD, MSA or B2C account.
+3. Sign in with Microsoft Entra ID, MSA or B2C account.
 4. If this is your first time running the scenario, you will see a consent dialogue. Select 'yes' to proceed.
 5. Once successfully signed-in, basic user details will be displayed.
 
@@ -163,7 +163,7 @@ To explore more about the application, follow on screen options.
 
 ## Register your Own Application (Optional)  
 
-To begin registering your app, start at the [Azure portal](https://aka.ms/MobileAppReg)
+To begin registering your app, start at the [Microsoft Entra admin center](https://entra.microsoft.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade/quickStartType~/null/sourceType/Microsoft_AAD_IAM)
 
 To **create** an app registration,  
 
@@ -179,7 +179,7 @@ To **create** an app registration,
 
 **Configure** the sample application with your app registration by replacing the sample code in `auth_config.json` and `AndroidManifest.xml`
 
-1. Copy and paste the ***MSAL Configuration*** JSON from the Azure portal into `auth_config_multiple_account.json` under the res\raw folder.
+1. Copy and paste the ***MSAL Configuration*** JSON from the Microsoft Entra admin center into `auth_config_multiple_account.json` under the res\raw folder.
 
 2. Inside the `AndroidManifest.xml`, 
     
@@ -197,7 +197,7 @@ To **create** an app registration,
     
             - `auth_config.json` contains this information as a reference inside the `redirect_uri` field.
             - The Signature Hash should NOT be URL encoded in the `AndroidManifest.xml`.
-        Refer [Azure Active Directory Android Quickstart](https://docs.microsoft.com/azure/active-directory/develop/quickstart-v2-android) for more details
+        Refer [Microsoft Entra ID Android Quickstart](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-v2-android) for more details
 
 From menu, select *Build* > *Clean Project* and *Run* > *Run 'app'*.
 
