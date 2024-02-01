@@ -28,6 +28,7 @@ allprojects {
 android {
     compileSdk rootProject.ext.compileSdkVersion
     defaultConfig {
+        namespace "com.azuresamples.msalandroidapp"
         applicationId "com.azuresamples.msalandroidapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
