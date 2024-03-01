@@ -6,7 +6,7 @@ if (project.hasProperty("distMsalVersion")) {
     msalVersion = distMsalVersion
 }
 
-allprojects {
+/*allprojects {
     repositories {
         mavenCentral()
         google()
@@ -23,7 +23,7 @@ allprojects {
             }
         }
     }
-}
+}*/
 
 android {
     compileSdk rootProject.ext.compileSdkVersion
