@@ -23,26 +23,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="com.microsoft.identity.client.BrowserTabActivity"
-            android:exported="true"
-            tools:replace="android:exported">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <!--
-                    Add in your scheme/host from registered redirect URI
-                    note that the leading "/" is required for android:path
-                -->
-                <data
-                    android:host="com.azuresamples.msalandroidapp"
-                    android:path="/1wIqXSqBj7w+h11ZifsnqwgyKrY="
-                    android:scheme="msauth" />
-            </intent-filter>
-        </activity>
     </application>
 
 </manifest>
