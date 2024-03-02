@@ -6,25 +6,6 @@ if (project.hasProperty("distMsalVersion")) {
     msalVersion = distMsalVersion
 }
 
-allprojects {
-    repositories {
-        mavenCentral()
-        google()
-        mavenLocal()
-        maven {
-            url 'https://pkgs.dev.azure.com/MicrosoftDeviceSDK/DuoSDK-Public/_packaging/Duo-SDK-Feed/maven/v1'
-        }
-        maven {
-            name "vsts-maven-adal-android"
-            url "https://identitydivision.pkgs.visualstudio.com/_packaging/AndroidADAL/maven/v1"
-            credentials {
-                username System.getenv("ENV_VSTS_MVN_ANDROIDADAL_USERNAME") != null ? System.getenv("ENV_VSTS_MVN_ANDROIDADAL_USERNAME") : project.findProperty("vstsUsername")
-                password System.getenv("ENV_VSTS_MVN_ANDROIDADAL_ACCESSTOKEN") != null ? System.getenv("ENV_VSTS_MVN_ANDROIDADAL_ACCESSTOKEN") : project.findProperty("vstsMavenAccessToken")
-            }
-        }
-    }
-}
-
 android {
     compileSdk rootProject.ext.compileSdkVersion
     defaultConfig {
