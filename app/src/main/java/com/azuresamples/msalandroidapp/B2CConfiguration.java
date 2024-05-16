@@ -30,7 +30,7 @@ import java.util.List;
  * The value in this class has to map with the json configuration file (auth_config_b2c.json).
  * i.e. If you are using the following json file.
  * {
- *   "client_id" : "90c0fe63-bcf2-44d5-8fb7-b8bbc0b29dc6",
+ *   "client_id" : "Enter_the_Application_Id_Here",
  *   "redirect_uri" : "msauth://com.azuresamples.msalandroidapp/1wIqXSqBj7w%2Bh11ZifsnqwgyKrY%3D",
  *   "account_mode" : "MULTIPLE",
  *   "broker_redirect_uri_registered": false,
