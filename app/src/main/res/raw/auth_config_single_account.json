@@ -1,7 +1,7 @@
 {
-  "client_id":"<enter_your_clientID>",
-  "authorization_user_agent":"DEFAULT",
-  "redirect_uri":"<enter_your_redirect_uri>",
+  "client_id" : "<enter_your_clientID>",
+  "authorization_user_agent" : "DEFAULT",
+  "redirect_uri" : "<enter_your_redirect_uri>",
   "account_mode" : "SINGLE",
   "broker_redirect_uri_registered": true,
   "authorities" : [

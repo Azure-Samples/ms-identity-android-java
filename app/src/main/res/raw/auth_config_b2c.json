@@ -1,6 +1,6 @@
 {
-  "client_id":"<enter_your_clientID>",
-  "redirect_uri":"<enter_your_redirect_uri>",
+  "client_id" : "<enter_your_clientID>",
+  "redirect_uri" : "<enter_your_redirect_uri>",
   "account_mode" : "MULTIPLE",
   "broker_redirect_uri_registered": false,
   "authorities": [
