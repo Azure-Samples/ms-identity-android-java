@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.azuresamples.msalandroidapp">
+    package="<enter_the_package_name>">
 
     <application
         android:allowBackup="true"
@@ -38,8 +38,8 @@
                     note that the leading "/" is required for android:path
                 -->
                 <data
-                    android:host="com.azuresamples.msalandroidapp"
-                    android:path="/1wIqXSqBj7w+h11ZifsnqwgyKrY="
+                    android:host="<enter_the_package_name>"
+                    android:path="/enter_the_signature_hash"
                     android:scheme="msauth" />
             </intent-filter>
         </activity>
