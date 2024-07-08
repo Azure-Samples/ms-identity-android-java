@@ -39,7 +39,7 @@
                 -->
                 <data
                     android:host="com.azuresamples.msalandroidapp"
-                    android:path="/1wIqXSqBj7w+h11ZifsnqwgyKrY="
+                    android:path="/enter_the_signature_hash"
                     android:scheme="msauth" />
             </intent-filter>
         </activity>

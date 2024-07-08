@@ -1,7 +1,7 @@
 {
-  "client_id" : "Enter_the_Application_Id_Here",
-  "authorization_user_agent" : "DEFAULT",
-  "redirect_uri" : "msauth://com.azuresamples.msalandroidapp/1wIqXSqBj7w%2Bh11ZifsnqwgyKrY%3D",
+  "client_id" : "<enter_your_clientID>",
+  "authorization_user_agent" : "WEBVIEW",
+  "redirect_uri" : "<enter_your_redirect_uri>",
   "account_mode" : "MULTIPLE",
   "broker_redirect_uri_registered": true,
   "authorities" : [
