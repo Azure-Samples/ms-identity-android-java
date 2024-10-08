@@ -8,7 +8,7 @@ ext {
     buildToolsVersion = "28.0.3"
 
     // Plugins
-    gradleVersion = '7.4.2'
+    gradleVersion = '8.2.2'
     androidMavenGradlePluginVersion = "1.4.1"
 
     // Libraries

@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 
-def msalVersion = "4.+"
+def msalVersion = "5.+"
 
 if (project.hasProperty("distMsalVersion")) {
     msalVersion = distMsalVersion
@@ -86,6 +86,7 @@ android {
             setIgnore(true);
         }
     }
+    namespace 'com.azuresamples.msalandroidapp'
 }
 
 dependencies {
