@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Min Sdk version for YubiKit is 19, as well as for various libraries within CredMan, so override is needed to avoid build errors -->
+    <uses-sdk tools:overrideLibrary="com.yubico.yubikit.android, androidx.credentials, com.google.android.libraries.identity.googleid" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
