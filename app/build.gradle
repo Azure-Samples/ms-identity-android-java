@@ -26,6 +26,7 @@ allprojects {
 }
 
 android {
+    namespace 'com.azuresamples.msalandroidapp'
     compileSdk rootProject.ext.compileSdkVersion
     defaultConfig {
         applicationId "com.azuresamples.msalandroidapp"
@@ -55,8 +56,8 @@ android {
     // which depends on Version 8.
     // Host apps that use a library with version 8 must also be able to handle version 8 as well.
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     buildTypes {
