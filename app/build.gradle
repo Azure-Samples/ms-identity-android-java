@@ -26,6 +26,7 @@ allprojects {
 }
 
 android {
+    namespace 'com.azuresamples.msalandroidapp'
     compileSdk rootProject.ext.compileSdkVersion
     defaultConfig {
         applicationId "com.azuresamples.msalandroidapp"
@@ -70,13 +71,24 @@ android {
     flavorDimensions "main"
     productFlavors {
         local {
+            dimension "main"
             // To be used with android-complete only.
 
             // So that it could look for the 'local' flavor in Broker projects.
             matchingFallbacks = ['local']
         }
+        snapshot {
+            dimension "main"
+        }
 
-        external {}
+        dist {
+            dimension "main"
+        }
+        external {
+            dimension "main"
+            versionNameSuffix "-external"
+            matchingFallbacks = ['dist']
+        }
     }
 
     // if we don't have MSAL locally then we probably don't need that variant
