@@ -1,14 +1,13 @@
 // Variables for entire project
 ext {
     // SDK
-    minSdkVersion = 21
-    automationAppMinSDKVersion = 21
-    targetSdkVersion = 33
-    compileSdkVersion = 34
-    buildToolsVersion = "28.0.3"
+    minSdkVersion = 24
+    targetSdkVersion = 35
+    compileSdkVersion = 35
+    buildToolsVersion = "35.0.0"
 
     // Plugins
-    gradleVersion = '8.2.2'
+    gradleVersion = '8.10.0'
     androidMavenGradlePluginVersion = "1.4.1"
 
     // Libraries
